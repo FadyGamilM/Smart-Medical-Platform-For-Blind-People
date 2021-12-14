@@ -35,6 +35,19 @@ const doctor_schema = new mongoose.Schema({
 		description: String,
 		timetable: [new Date()],
 	},
+	rate: {
+		type: Number,
+	},
+	entity_id: {
+		type: mongoose.Schema.Types.ObjectId,
+		required: true,
+		refPath: "onModel",
+	},
+	onModel: {
+		type: String,
+		required: true,
+		enum: ["Pharmacy", "Clinic", "Hospital"],
+	},
 });
 
 const Doctor = mongoose.model("Doctor", doctor_schema);
