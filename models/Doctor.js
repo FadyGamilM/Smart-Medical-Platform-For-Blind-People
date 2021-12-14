@@ -33,23 +33,20 @@ const doctor_schema = new mongoose.Schema({
 	},
 	bio: {
 		description: String,
-		timetable: [new Date()],
 	},
+	timetable: [
+		{
+			type: Date,
+		},
+	],
 	rate: {
 		type: Number,
 	},
 	entity_id: {
 		type: mongoose.Schema.Types.ObjectId,
 		required: true,
-		refPath: "onModel",
-	},
-	onModel: {
-		type: String,
-		required: true,
-		enum: ["Pharmacy", "Clinic", "Hospital"],
+		ref: "Hospital",
 	},
 });
 
-const Doctor = mongoose.model("Doctor", doctor_schema);
-
-module.exports = Doctor;
+exports.Doctor = mongoose.model("Doctor", doctor_schema);
