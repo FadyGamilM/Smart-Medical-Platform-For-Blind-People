@@ -26,8 +26,8 @@ const doctorRoutes = require("./routes/doctor");
 //! chain all routes to app
 app.use(authRoutes);
 app.use(homeRoutes);
-app.use(hospitalRoutes);
 app.use(doctorRoutes);
+app.use(hospitalRoutes);
 
 //! development env port = 5000 , production port = "From Azure"
 const PORT = process.env.PORT || 5000;
