@@ -8,7 +8,7 @@ const Keys = require("../config/keys");
 
 //TODO => Setup the passport strategy
 // Client ID : 175343666428-bbb2jc11obhbovu8dm988hlnrjsnvpfk.apps.googleusercontent.com
-// Client Secret : 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
+// Client Secret : 
 //! tell passport to use this available provider strategy (passport google strategy)
 passport.use(
 	new GoogleStrategy(
