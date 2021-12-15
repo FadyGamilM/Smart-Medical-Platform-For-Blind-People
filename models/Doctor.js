@@ -45,7 +45,7 @@ const doctor_schema = new mongoose.Schema({
 	entity_id: {
 		type: mongoose.Schema.Types.ObjectId,
 		required: true,
-		ref: "Hospital",
+		ref: "Entity",
 	},
 });
 

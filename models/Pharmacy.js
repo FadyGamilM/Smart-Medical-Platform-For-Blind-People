@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const pharmacy_schema = new mongoose.Schema({
 	admin: {
 		type: mongoose.Schema.Types.ObjectId,
-		ref: "Pharmacy_Admin",
+		ref: "Entity_Admin",
 	},
 	address: [String],
 	hero_photo: [String],
