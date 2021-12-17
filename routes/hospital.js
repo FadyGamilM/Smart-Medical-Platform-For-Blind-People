@@ -1,4 +1,4 @@
-const router = require("express").Router();
+/*const router = require("express").Router();
 
 // import the route handler "controller"
 const { createNewHospital, getAllDoctors } = require("../controllers/hospital");
@@ -9,3 +9,4 @@ router.route("/hospital").post(createNewHospital);
 router.route("/hospital/:hospitalID").get(getAllDoctors);
 
 module.exports = router;
+*/

@@ -11,13 +11,14 @@ const order_schema = new mongoose.Schema({
 	},
 	order_data: {
 		medecins: [String],
-		Date: new Date(),
+		Date: Date,
 		address: String,
 	},
 	price: {
 		type: Number,
 	},
-	approved: Boolean,
+	userApproval: Boolean,
+	pharmacyApproval: Boolean,
 });
 
 const Order = mongoose.model("Order", order_schema);

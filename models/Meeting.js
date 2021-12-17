@@ -9,7 +9,7 @@ const meeting_schema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Doctor",
 	},
-	Date: new Date(),
+	Date: Date,
 	meeting_link: String,
 });
 

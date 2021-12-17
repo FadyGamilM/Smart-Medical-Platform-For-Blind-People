@@ -1,4 +1,4 @@
-//! require router app to chain it to main express app at etnry point of program
+/*//! require router app to chain it to main express app at etnry point of program
 const router = require("express").Router();
 
 //! require passport library
@@ -19,4 +19,4 @@ router.get(
 // TODO=> this route is for users when they click on they account to gurantee our access to thier google accounts, and then Google server will send them back to /api/auth/google/callback?code=SOME_CODE
 router.get("/auth/google/callback", passport.authenticate("google"));
 
-module.exports = router;
+module.exports = router;*/

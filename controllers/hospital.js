@@ -1,5 +1,5 @@
-// import Hospital model
-const { Hospital } = require("../models/Hospital");
+/*// import Hospital model
+//const { Hospital } = require("../models/Hospital");
 // import Docotr model
 const { Doctor } = require("../models/Doctor");
 
@@ -38,3 +38,4 @@ exports.getAllDoctors = async (req, res, next) => {
 		next(error);
 	}
 };
+*/
