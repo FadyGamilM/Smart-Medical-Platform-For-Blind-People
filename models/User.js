@@ -32,6 +32,9 @@ const user_schema = new mongoose.Schema({
 			type: String,
 		},
 	},
+	googleId: {
+		type: String,
+	},
 });
 
 const User = mongoose.model("User", user_schema);

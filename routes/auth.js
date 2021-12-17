@@ -1,4 +1,4 @@
-/*//! require router app to chain it to main express app at etnry point of program
+//! require router app to chain it to main express app at etnry point of program
 const router = require("express").Router();
 
 //! require passport library
@@ -19,4 +19,14 @@ router.get(
 // TODO=> this route is for users when they click on they account to gurantee our access to thier google accounts, and then Google server will send them back to /api/auth/google/callback?code=SOME_CODE
 router.get("/auth/google/callback", passport.authenticate("google"));
 
-module.exports = router;*/
+router.get("/api/logout", (req, res, next) => {
+	// passport also attach some functions to req as it attached before the user document .. we can use these function
+	req.logout(); // it takes the cookie and kill this cookie
+	return res.send(req.user); // lets improve that this user isn't defined anymore
+});
+
+router.get("/api/current_user", (req, res, next) => {
+	return res.send(req.user);
+});
+
+module.exports = router;
