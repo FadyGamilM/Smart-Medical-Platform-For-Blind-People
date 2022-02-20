@@ -1,7 +1,7 @@
-const router = require("express").Router();
+// const router = require("express").Router();
 
-const { RegisterNewDoctor } = require("../controllers/doctor");
+// const { RegisterNewDoctor } = require("../controllers/doctor");
 
-router.route("/doctor").post(RegisterNewDoctor);
+// router.route("/doctor").post(RegisterNewDoctor);
 
-module.exports = router;
+// module.exports = router;

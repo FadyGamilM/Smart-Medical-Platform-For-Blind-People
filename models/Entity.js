@@ -4,6 +4,7 @@ const entity_schema = new mongoose.Schema({
 	name: {
 		type: String,
 		required: true,
+		unique: true
 	},
     icon: {
         type: String,
@@ -16,9 +17,13 @@ const entity_schema = new mongoose.Schema({
 		ref: "Entity_Admin",
 	},
     flag:{
-        type: String
+		type: String,
+		enum:['H','C']
     }
 
 });
 
-exports.Entity = mongoose.model("Entity", entity_schema);
+const Entity = mongoose.model("Entity", entity_schema);
+
+module.exports = Entity;
+//exports.Entity = mongoose.model("Entity", entity_schema);
