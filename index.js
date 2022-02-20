@@ -29,6 +29,9 @@ app.use(express.json());
 //! import database connection service
 require("./services/mongo-atlas");
 
+// cors
+const cors = require('cors');
+
 //! require/import auth routes and chain these routes to main express app
 const authRoutes = require("./routes/auth");
 //! require/import home route and chain it to main express app
@@ -45,6 +48,7 @@ const authRoutes = require("./routes/auth");
 // const meetingRoutes = require("./routes/meeting");
 
 //! chain all routes to app
+app.use(cors({origin: "*"}));
 app.use(authRoutes);
 // app.use(homeRoutes);
 // app.use(doctorRoutes);
