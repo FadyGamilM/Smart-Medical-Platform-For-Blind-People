@@ -1,5 +1,5 @@
 // // import Entity model
-// const { Entity } = require("../models/Entity");
+const Entity = require("../models/Entity");
 // // import Docotr model
 // const { Doctor } = require("../models/Doctor");
 
@@ -40,3 +40,22 @@
 // 		next(error);
 // 	}
 // };
+
+// @METHOD                                     GET
+// @URL                                        /clinics
+// @ACTION_PERFORMEER                          admin of application
+// @DESCRIPTION                                admin need to see all clinics
+exports.getAllClinics = async (req, res, next) => {
+	try {
+		const clinics = await Entity.find({flag:'C'},{
+			name:1,
+			icon:1,
+			telephone:1,
+			address:1
+		}).populate({path: "admin", select: {username:1, email:1}});
+		return res.status(200).json(clinics);
+	} catch (error) {
+		console.log(error);
+        res.status(400).json(error.message);
+	}
+};

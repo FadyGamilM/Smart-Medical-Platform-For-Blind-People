@@ -47,8 +47,13 @@ const doctor_schema = new mongoose.Schema({
 			type: Date,
 		},
 	],
+	rate_count:{
+		type: Number,
+		default:0
+	},
 	rate: {
 		type: Number,
+		default:0
 	},
 	entity_id: {
 		type: mongoose.Schema.Types.ObjectId,

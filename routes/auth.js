@@ -1,6 +1,6 @@
 // //! require router app to chain it to main express app at etnry point of program
 const router = require("express").Router();
-const {login, registerUser, registerDoctor, registerHadmin, registerCadmin, registerPadmin, logout} = require("../controllers/auth");
+const {login, registerUser, registerDoctor, registerHadmin, registerCadmin, registerPadmin} = require("../controllers/auth");
 // //! require passport library
 // const passport = require("passport");
 
@@ -39,6 +39,7 @@ router.route("/registration/hospitalAdmin").post(registerHadmin);
 router.route("/registration/clinicAdmin").post(registerCadmin);
 router.route("/registration/pharmacyAdmin").post(registerPadmin);
 router.route("/login").post(login);
+//router.route("/registration/appAdmin").post(registerAadmin);
 //router.route("/logout").get(logout);
 
 module.exports = router;

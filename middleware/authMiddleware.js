@@ -24,11 +24,16 @@ exports.protect = async (req, res, next) => {
 		const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
 		//! attach the whole user document into request to be availiable into next middleware handler
-		req.user = await User.findById(decoded.userID);
+		//const  = decoded.userID;
+		req.id = decoded.userID;
+		req.type = decoded.type
+
+		//req.user = await User.findById(decoded.userID);
 
 		next();
 	} catch (error) {
-		return res.status(403).json("not authorized, token is failed");
+		console.log(error)
+		return res.status(401).json("not authorized, token is failed");
 	}
 };
 

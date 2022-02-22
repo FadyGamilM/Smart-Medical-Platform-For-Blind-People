@@ -8,9 +8,10 @@ const Pharmacy = require("../models/Pharmacy");
 const jwt = require("jsonwebtoken");
 //const maxAge = 3*24*60*60;
 //jwt.sign({payload }, ACCESS_TOKEN_SECRET, {options});
-createToken = (userID) => {
-	return jwt.sign({ userID }, process.env.ACCESS_TOKEN_SECRET, {
-		expiresIn: "30s",
+//type = "user" or "doctor" or "admin"
+createToken = (userID, type) => {
+	return jwt.sign({ userID, type }, process.env.ACCESS_TOKEN_SECRET, {
+		expiresIn: "1d",
 	});
 };
 
@@ -52,7 +53,7 @@ exports.registerUser = async(req,res,next) =>{
                 gender:req.body.gender
             });
             /////////////////////////////// TOKENS ////////////////////////////
-            const token = createToken(newUser._id);
+            const token = createToken(newUser._id, "user");
             /////////////////////////////// TOKENS ////////////////////////////
             return res.status(200).json({
                 token
@@ -109,7 +110,7 @@ exports.registerHadmin = async(req,res,next) =>{
         //todo
         //check if the entity already exist
         const hospital = await Entity.findOne({name:req.body.hospitalname});
-        const admin = await Admin.findOne({username:req.body.username});
+        const admin = await Admin.findOne({email:req.body.email});
         if(!hospital && !admin){
             //create new hospital admin
             const newAdmin = await Admin.create({
@@ -143,7 +144,7 @@ exports.registerCadmin = async(req,res,next) =>{
         //todo
         //check if the entity already exist
         const clinic = await Entity.findOne({name:req.body.clinicname});
-        const admin = await Admin.findOne({username:req.body.username});
+        const admin = await Admin.findOne({email:req.body.email});
         if(!clinic && !admin){
             //create new clinic admin
             const newAdmin = await Admin.create({
@@ -175,7 +176,7 @@ exports.registerPadmin = async(req,res,next) =>{
         //todo
         //check if the entity already exist
         const pharmacy = await Entity.findOne({name:req.body.pharmacyname});
-        const admin = await Admin.findOne({username:req.body.username});
+        const admin = await Admin.findOne({email:req.body.email});
         if(!pharmacy && !admin){
             //create new pharmacy admin
             const newAdmin = await Admin.create({
@@ -202,9 +203,28 @@ exports.registerPadmin = async(req,res,next) =>{
     }  
 };
 
+// exports.registerAadmin = async(req,res,next) =>{
+//     try {
+//         //todo
+//             const newAdmin = await Admin.create({
+//                 username:req.body.username,
+//                 email:req.body.email,
+//                 password:req.body.password,
+//                 gender:req.body.gender,
+//                 role:"owner"
+//             });
+//             return res.status(200).send("Admin has been added successfully.");
+//     } catch (error) {
+//         console.log(error);
+//         res.status(400).json(error.message);
+//     } 
+// };
+
 // desc    POST request login user
 // route   /login
 // access  public access api
+
+
 exports.login = async(req,res,next) => {
     try {
         //todo
@@ -212,7 +232,7 @@ exports.login = async(req,res,next) => {
         //const type = req.body.type;
         if(type=='admin'){
             const admin = await Admin.log(email, pass);         
-            const token = createToken(admin._id);
+            const token = createToken(admin._id, "admin");
             //todo => we need to return the info of entity to which this admin is related and also doctors in this hospital
             const adminRole = admin.role;
             // if(adminRole == 'h_admin'){
@@ -281,14 +301,14 @@ exports.login = async(req,res,next) => {
         }
         else if(type=='user'){
             const user = await User.log(email, pass);
-            const token = createToken(user._id);
+            const token = createToken(user._id, "user");
             return res.status(200).json({
                 token
             });
         }
         else{
             const doctor = await Doctor.log(email, pass);
-            const token = createToken(doctor._id);
+            const token = createToken(doctor._id, "doctor");
             return res.status(200).json({
                 token
             });

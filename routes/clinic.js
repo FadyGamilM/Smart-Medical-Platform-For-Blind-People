@@ -1,11 +1,11 @@
-// const router = require("express").Router();
+const router = require("express").Router();
 
 // // import the route handler "controller"
-// const { getClinicInfo } = require("../controllers/clinic");
+const { getAllClinics } = require("../controllers/clinic");
 
 // // chain the route to the router app to chain it to main express app
 // //router.route("/clinic").post(createNewClinic);
 
-// router.route("/clinic/:clinicID").get(getClinicInfo);
+router.route("/clinics").get(getAllClinics);
 
-// module.exports = router;
+module.exports = router;

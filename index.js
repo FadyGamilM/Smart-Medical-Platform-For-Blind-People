@@ -35,27 +35,33 @@ const cors = require('cors');
 //! require/import auth routes and chain these routes to main express app
 const authRoutes = require("./routes/auth");
 //! require/import home route and chain it to main express app
-// const homeRoutes = require("./routes/home");
-// //! require/import hospital routes and chain these routes to main express app
-// const hospitalRoutes = require("./routes/hospital");
-// //! import doctors routes and chain these routes to main express app
-// const doctorRoutes = require("./routes/doctor");
-// //! import profile routes and chain these routes to main express app
-// const profileRoutes = require("./routes/profile");
+const homeRoutes = require("./routes/home");
+//! require/import hospital routes and chain these routes to main express app
+const hospitalRoutes = require("./routes/hospital");
+//! import doctors routes and chain these routes to main express app
+const doctorRoutes = require("./routes/doctor");
+//! import profile routes and chain these routes to main express app
+const profileRoutes = require("./routes/profile");
 // //! import pharmacy routes and chain these routes to main express app
-// const pharmacyRoutes = require("./routes/pharmacy");
+const pharmacyRoutes = require("./routes/pharmacy");
 // //! import meeting routes and chain these routes to main express app
 // const meetingRoutes = require("./routes/meeting");
+//! import clinic routes and chain these routes to main express app
+const clinicRoutes = require("./routes/clinic");
+//! import meeting routes and chain these routes to main express app
+const adminRoutes = require("./routes/admin");
 
 //! chain all routes to app
 app.use(cors({origin: "*"}));
 app.use(authRoutes);
-// app.use(homeRoutes);
-// app.use(doctorRoutes);
-// //app.use(hospitalRoutes);
-// app.use(profileRoutes);
-// app.use(pharmacyRoutes);
+app.use(homeRoutes);
+app.use(doctorRoutes);
+app.use(hospitalRoutes);
+app.use(clinicRoutes);
+app.use(profileRoutes);
+app.use(pharmacyRoutes);
 // app.use(meetingRoutes);
+app.use(adminRoutes);
 
 //! development env port = 5000 , production port = "From Azure"
 const PORT = process.env.PORT || 5000;

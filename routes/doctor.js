@@ -1,7 +1,8 @@
-// const router = require("express").Router();
+const router = require("express").Router();
 
-// const { RegisterNewDoctor } = require("../controllers/doctor");
+const { rateDoctor, getDoctorsOfEntity } = require("../controllers/doctor");
 
-// router.route("/doctor").post(RegisterNewDoctor);
+router.route("/doctor/rating").patch(rateDoctor);
+router.route("/doctors/:entity").get(getDoctorsOfEntity)
 
-// module.exports = router;
+module.exports = router;

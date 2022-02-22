@@ -39,6 +39,13 @@ const user_schema = new mongoose.Schema({
 	googleId: {
 		type: String,
 	},
+	dateOfBirth:{
+		type: Date
+	},
+	blood:{
+		type: String,
+		default: "unknown"
+	}
 });
 //fire a function before saving document to db
 user_schema.pre('save', async function(next){

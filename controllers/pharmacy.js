@@ -1,5 +1,5 @@
 // // import models
-// const {Pharmacy} = require("../models/Pharmacy");
+ const Pharmacy = require("../models/Pharmacy");
 // const {Order} = require("../models/Order");
 // exports.getPharmacy = async (req, res, next) => {
 // 	try {
@@ -33,3 +33,21 @@
 // 		next(error);
 // 	}
 // };
+// @METHOD                                     GET
+// @URL                                        /pharmacies
+// @ACTION_PERFORMEER                          admin of application
+// @DESCRIPTION                                admin need to see all pharmacies
+exports.getAllPharmacies = async (req, res, next) => {
+	try {
+		const pharmacies = await Pharmacy.find({},{
+			name:1,
+			icon:1,
+			telephone:1,
+			address:1
+		}).populate({path: "admin", select: {username:1, email:1}});
+		return res.status(200).json(pharmacies);
+	} catch (error) {
+		console.log(error);
+        res.status(400).json(error.message);
+	}
+};
