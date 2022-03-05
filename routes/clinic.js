@@ -7,5 +7,7 @@ const { getAllClinics } = require("../controllers/clinic");
 // //router.route("/clinic").post(createNewClinic);
 
 router.route("/clinics").get(getAllClinics);
+/////////////////////fady///////////////////////////
+//router.route("/clinics").get(getAllClinics);// 2 apps
 
 module.exports = router;

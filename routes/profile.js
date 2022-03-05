@@ -8,7 +8,7 @@ const { protect } = require("../middleware/authMiddleware");
 // // router.route("/profile/:_id/:type").get(getProfile);
 
 //this route must be protected
-router.route("/profile").get(protect,getProfile);
+router.route("/profile").get(protect,getProfile);//return data in login
 
 
 module.exports = router;

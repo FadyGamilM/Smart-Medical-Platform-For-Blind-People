@@ -14,3 +14,7 @@ const announcement_schema = new mongoose.Schema({
 		ref: "Entity_Admin",
 	},
 });
+
+const Announcement = mongoose.model("Announcement", announcement_schema);
+
+module.exports = Announcement;

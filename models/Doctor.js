@@ -21,6 +21,12 @@ const doctor_schema = new mongoose.Schema({
 		type: String,
 		enum: ["Male", "Female"],
 	},
+	dateOfBirth:{
+		type: Date
+	},
+	university:{
+		type:String
+	},
 	patients: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
@@ -42,6 +48,7 @@ const doctor_schema = new mongoose.Schema({
 	bio: {
 		description: String,
 	},
+	telephone: [String],
 	timetable: [
 		{
 			type: Date,
@@ -55,6 +62,7 @@ const doctor_schema = new mongoose.Schema({
 		type: Number,
 		default:0
 	},
+	reviews:[String],
 	entity_id: {
 		type: mongoose.Schema.Types.ObjectId,
 		required: true,

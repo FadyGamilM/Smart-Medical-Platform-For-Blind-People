@@ -1,6 +1,6 @@
 // //! require router app to chain it to main express app at etnry point of program
 const router = require("express").Router();
-const {login, registerUser, registerDoctor, registerHadmin, registerCadmin, registerPadmin} = require("../controllers/auth");
+const {registerAadmin, registerUser, registerDoctor, registerHadmin, registerCadmin, registerPadmin,loginUserApp,loginDoctorApp} = require("../controllers/auth");
 // //! require passport library
 // const passport = require("passport");
 
@@ -32,13 +32,28 @@ const {login, registerUser, registerDoctor, registerHadmin, registerCadmin, regi
 
 
 
-////////////////////////////////////////////////////////////////////////////
-router.route("/registration/user").post(registerUser);
-router.route("/registration/doctor").post(registerDoctor);
-router.route("/registration/hospitalAdmin").post(registerHadmin);
-router.route("/registration/clinicAdmin").post(registerCadmin);
-router.route("/registration/pharmacyAdmin").post(registerPadmin);
-router.route("/login").post(login);
+//////////////////////////////////1 app//////////////////////////////////////////
+//router.route("/registration/user").post(registerUser);
+//router.route("/registration/doctor").post(registerDoctor);
+//router.route("/registration/hospitalAdmin").post(registerHadmin);
+//router.route("/registration/clinicAdmin").post(registerCadmin);
+//router.route("/registration/pharmacyAdmin").post(registerPadmin);
+//router.route("/login").post(login);
+////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////fady/////////////////////////////////////////////
+// user application
+router.route("/register").post(registerUser);//done
+router.route("/login").post(loginUserApp);//done
+
+// doctor application 
+router.route("/login/doctor").post(loginDoctorApp);//done
+router.route("/register/doctor").post(registerDoctor);
+router.route("/register/hospitalAdmin").post(registerHadmin);
+router.route("/register/clinicAdmin").post(registerCadmin);
+router.route("/register/pharmacyAdmin").post(registerPadmin);
+//////////////////////////////////2 apps//////////////////////////////////////////
+
 //router.route("/registration/appAdmin").post(registerAadmin);
 //router.route("/logout").get(logout);
 
