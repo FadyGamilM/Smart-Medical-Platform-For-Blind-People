@@ -31,10 +31,7 @@ const user_schema = new mongoose.Schema({
 		},
 	],
 	history: {
-		disease: [String],
-		prescreption: {
-			type: String,
-		},
+		type:String
 	},
 	googleId: {
 		type: String,
@@ -66,7 +63,7 @@ user_schema.methods.isValidPassword = async function (password) {
 
 //static method to login users 
 user_schema.statics.log = async function(email,password) {
-		const user = await this.findOne({email});
+		const user = await this.findOne({email}).populate({path: "meetings"});
 		if(user){
 			const auth = await bcrypt.compare(password,user.password);
 			if(auth) {

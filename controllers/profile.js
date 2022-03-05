@@ -65,7 +65,8 @@ exports.getProfile = async (req, res, next) => {
                                 "meetings":doctor.meetings,
                                 "timetable":doctor.timetable,
                                 "rate":doctor.rate,
-                                "entity_name":doctor.entity_id.name   
+                                "entity_name":doctor.entity_id.nameو
+                                //clinic or hospital   
                     }
                     return res.status(200).json(returns);
             }

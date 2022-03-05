@@ -48,11 +48,12 @@ const Doctor = require("../models/Doctor");
 exports.getAllHospitals = async (req, res, next) => {
 	try {
 		const hospitals = await Entity.find({flag:'H'},{
+			_id:0,
 			name:1,
 			icon:1,
 			telephone:1,
 			address:1
-		}).populate({path: "admin", select: {username:1, email:1}});
+		}).populate({path: "admin", select: {username:1, email:1, _id:0}});
 		return res.status(200).json(hospitals);
 	} catch (error) {
 		console.log(error);

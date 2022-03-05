@@ -40,6 +40,8 @@ const homeRoutes = require("./routes/home");
 const hospitalRoutes = require("./routes/hospital");
 //! import doctors routes and chain these routes to main express app
 const doctorRoutes = require("./routes/doctor");
+//! import user routes and chain these routes to main express app
+const userRoutes = require("./routes/user");
 //! import profile routes and chain these routes to main express app
 const profileRoutes = require("./routes/profile");
 // //! import pharmacy routes and chain these routes to main express app
@@ -62,6 +64,7 @@ app.use(profileRoutes);
 app.use(pharmacyRoutes);
 // app.use(meetingRoutes);
 app.use(adminRoutes);
+app.use(userRoutes);
 
 //! development env port = 5000 , production port = "From Azure"
 const PORT = process.env.PORT || 5000;

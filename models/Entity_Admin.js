@@ -18,6 +18,9 @@ const entity_admin_schema = new mongoose.Schema({
 		required: true,
 		minlength: 8
 	},
+	profilePic: {
+		type: String,
+	},
 	gender: {
 		type: String,
 		enum: ["Male", "Female"]
