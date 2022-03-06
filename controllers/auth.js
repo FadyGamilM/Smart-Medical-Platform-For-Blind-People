@@ -431,12 +431,20 @@ exports.loginDoctorApp = async(req,res,next) => {
             if(valid){
                 //login admin
                 const token = createToken(admin._id,"admin");
+                const entity = await Entity.findOne({admin:admin._id},{
+                    _id:0,
+                    name:1,
+                    address:1,
+                    telephone:1,
+                    icon:1
+                });
                 const returns = {
                     username:admin.username,
                     email:admin.email,
                     gender:admin.gender,
                     profilePic:admin.profilePic,
                     role:admin.role,
+                    entity,
                     token
                 };
                 return res.status(200).json(returns);
