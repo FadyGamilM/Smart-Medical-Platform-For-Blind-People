@@ -219,6 +219,9 @@ exports.registerPadmin = async(req,res,next) =>{
                 });
                 return res.status(200).send("pharmacy and admin have been added successfully.");
             }
+            else{
+                res.status(400).json("this email already exists");
+            }
             
         }else{
             res.status(400).json("pharmacy already exists");
