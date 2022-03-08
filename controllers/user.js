@@ -61,3 +61,31 @@ exports.getDepartmentDoctors = async (req, res, next) =>{
         return res.status(400).json(error.message);
     }
 }
+exports.getDoctor = async (req,res,next) =>{
+ try {
+    const email = req.params.doctorname; 
+    const doctor = await Doctor.findOne({email},{
+        _id:0,
+        username:1,
+        email:1,
+        university:1,
+        profilePic:1,
+        specialization:1,
+        bio:1,
+        telephone:1,
+	    timetable:1,
+        reviews:1,
+        rate:1,
+        rate_count:1
+    }).populate({path: "entity_id", select: {name:1, _id:0, flag:1}});; 
+    if(doctor){
+        return res.status(200).json(doctor);
+    }
+    else{
+        return res.status(400).json("no doctor found with this name");
+    }
+ } catch (error) {
+    console.log(error);
+    return res.status(400).json(error.message); 
+ }
+};

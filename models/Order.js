@@ -19,6 +19,7 @@ const order_schema = new mongoose.Schema({
 	},
 	userApproval: Boolean,
 	pharmacyApproval: Boolean,
+	delivered :Boolean
 });
 
 const Order = mongoose.model("Order", order_schema);

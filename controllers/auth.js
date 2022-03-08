@@ -97,6 +97,7 @@ exports.registerDoctor = async(req,res,next) =>{
                     gender:req.body.gender,
                     profilePic: req.body.profilePic,
                     specialization:req.body.specialization,
+                    telephone:req.body.telephone,
                     entity_id:entity._id
                 });
                 return res.status(200).send("doctor has been added successfully.");
@@ -390,7 +391,7 @@ exports.loginDoctorApp = async(req,res,next) => {
         const admin = await Admin.findOne({email});
         if(!admin){
             const doctor = await Doctor.findOne({email}).populate(
-                {path: "entity_id", select: {name:1}}).populate(
+                {path: "entity_id", select: {name:1,_id:0, flag:1}}).populate(
                 {path: "meetings"});
             if(!doctor){
                 throw Error("incorrect email");
@@ -416,6 +417,7 @@ exports.loginDoctorApp = async(req,res,next) => {
                         rate:doctor.rate,
                         dateOfBirth:doctor.dateOfBirth,
                         entity_id:doctor.entity_id,
+                        role:"doctor",
                         token
                     };
                     return res.status(200).json(returns);
