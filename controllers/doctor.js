@@ -64,6 +64,36 @@ exports.getDoctorsOfEntity = async (req, res, next) => {
     }
 };
 
+exports.setTimeTable = async (req, res, next) =>{
+    try {
+        const _id  = req.id; 
+        const type = req.type;
+        if(type == "doctor"){
+            //push to timetable array the new time
+            //{$push: {friends: {firstName: "Harry", lastName: "Potter"}}}
+            const updated = await Doctor.updateOne({_id},{
+                $push:{timetable:{
+                    day:req.body.day,
+			        from:req.body.from,
+			        to:req.body.to
+                }}
+            });
+            if(updated.matchedCount==1 && updated.modifiedCount==1){
+                return res.status(200).json("timetable has been updated successfully");
+            }
+            else{
+                res.status(400).json("couldn't update");
+            }
+            //res.status(200).json("timetable has been updated successfully"); 
+        }
+        else{
+           res.status(401).json("not authorized, doctor action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json(error.message);
+    }
+}
 // exports.addReview = async (req, res, next) => {
 //     try {
 //         //todo: add review to certain doctor by his id

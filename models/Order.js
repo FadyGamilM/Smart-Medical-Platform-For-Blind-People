@@ -16,10 +16,20 @@ const order_schema = new mongoose.Schema({
 	},
 	price: {
 		type: Number,
+		default:null
 	},
-	userApproval: Boolean,
-	pharmacyApproval: Boolean,
-	delivered :Boolean
+	userApproval:{
+		type: Boolean,
+		default:false
+	},
+	pharmacyApproval:{
+		type: Boolean,
+		default:false
+	},
+	delivered :{
+		type: Boolean,
+		default:false
+	}
 });
 
 const Order = mongoose.model("Order", order_schema);
