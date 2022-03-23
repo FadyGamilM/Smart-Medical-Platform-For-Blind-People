@@ -9,8 +9,11 @@ const meeting_schema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Doctor",
 	},
-	Date: Date,
+	Date:String,
+	day:String,
+	slot:String,
 	meeting_link: String,
+	status:String
 });
 
 const Meeting = mongoose.model("Meeting", meeting_schema);

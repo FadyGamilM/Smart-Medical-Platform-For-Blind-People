@@ -51,7 +51,9 @@ const doctor_schema = new mongoose.Schema({
 	telephone: [String],
 	timetable: [
 		{
-			type: Date,
+			day:String,
+			from:String,
+			to:String
 		},
 	],
 	rate_count:{
