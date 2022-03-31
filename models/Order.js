@@ -10,9 +10,10 @@ const order_schema = new mongoose.Schema({
 		ref: "User",
 	},
 	order_data: {
-		medecins: [String],
+		form: String,
 		Date: Date,
 		address: String,
+		phone:String
 	},
 	price: {
 		type: Number,

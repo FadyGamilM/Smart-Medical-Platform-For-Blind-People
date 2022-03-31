@@ -61,7 +61,18 @@ exports.registerUser = async(req,res,next) =>{
                 profilePic: req.body.profilePic
             });
             const token = createToken(newUser._id, "user");
-            return res.status(200).json({token});
+            const returns = {
+                username:newUser.username,
+                email:newUser.email,
+                profilePic:newUser.profilePic,
+                gender:newUser.gender,
+                meetings:newUser.meetings,
+                history:newUser.history,
+                dateOfBirth:newUser.dateOfBirth,
+                blood:newUser.blood,
+                token
+            };
+            return res.status(200).json(returns);
         }
         else{
             res.status(400);
