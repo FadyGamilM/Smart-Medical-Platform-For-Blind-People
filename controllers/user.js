@@ -1,5 +1,6 @@
 const Doctor = require("../models/Doctor");
-//const Entity = require("../models/Entity");
+const Pharmacy = require("../models/Pharmacy");
+const Admin = require("../models/Entity_Admin");
 const Meeting = require("../models/Meeting");
 const User = require("../models/User");
 const Order = require("../models/Order");
@@ -177,5 +178,32 @@ exports.getOrders = async (req,res,next) =>{
     } catch (error) {
         console.log(error);
         return res.status(400).json(error.message); 
+    }
+};
+exports.makeOrder = async (req,res,next) =>{
+    try {
+        const user_id  = req.id;
+        const admin_id = await Admin.findOne({email:req.body.adminEmail},{_id:1});
+        const pharmacy = await Pharmacy.findOne({admin:admin_id},{_id:1});
+        if(admin_id && pharmacy){
+            const newOrder = await Order.create({
+                pharmacy: pharmacy,
+                user: user_id,
+                order_data: {
+                form:req.body.form ,
+                Date:req.body.date,
+                address:req.body.address,
+                phone:req.body.phone
+                },
+            });
+            return res.status(200).json("order added successfully");
+        }
+        else{
+            return res.status(400).json("there is something wrong with admin email or pharmacy");
+        }
+
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json(error.message);
     }
 };
