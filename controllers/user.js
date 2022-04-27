@@ -152,8 +152,17 @@ exports.getDoctor = async (req,res,next) =>{
 exports.getReservedSlots = async (req,res,next) =>{
     try {
         const doctor_id = await Doctor.findOne({email:req.params.doctorname},{_id:1});
-        //const date = req.body.date;
-        const reserved = await Meeting.find({doctor:doctor_id,Date:req.body.date},{slot:1,_id:0});
+        
+        // let D = String(req.params.d);
+        // let M = String(req.params.m);
+        // let Y = String(req.params.y);
+        // let date = D +'/'+ M +'/'+ Y;
+        // console.log(doctor_id)
+        // console.log("date=",req.params.date);
+        // console.log(typeof(req.params.date));
+        //,Date:req.params.date
+        const reserved = await Meeting.find({doctor:doctor_id,Date:req.params.date},{slot:1,_id:0});
+        //console.log("reserved=",reserved)
         if(reserved.length != 0){
             return res.status(200).json(reserved);
         }
