@@ -403,7 +403,8 @@ exports.loginDoctorApp = async(req,res,next) => {
         if(!admin){
             const doctor = await Doctor.findOne({email}).populate(
                 {path: "entity_id", select: {name:1,_id:0, flag:1}}).populate(
-                {path: "meetings"});
+                {path: "meetings",select:{_id:0,user:1,Date:1,day:1,slot:1,meeting_link:1,status:1}
+                ,populate:{path:"user",select:{_id:0,username:1}}});
             if(!doctor){
                 throw Error("incorrect email");
             }
