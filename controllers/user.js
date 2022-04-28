@@ -216,3 +216,35 @@ exports.makeOrder = async (req,res,next) =>{
         return res.status(400).json(error.message);
     }
 };
+
+// exports.userApproveOrder = async (req, res, next) =>{
+//     try {
+//         //checkout (payment api)
+//         const updated = await Order.updateOne({_id:req.body.id},{$set: { "userApproval" : true }});
+//         if(updated.matchedCount==1 && updated.modifiedCount==1){
+//             return res.status(200).json("user approved order");
+//         }
+//         else{
+//             res.status(400).json("couldn't approve order");
+//         }
+
+//     } catch (error) {
+//         console.log(error);
+//         res.status(400).json(error.message);
+//     }
+// };
+
+exports.userCancelOrder = async (req, res, next) =>{
+    try {
+        const deleted = await Order.deleteOne({_id:req.body.id});
+        if(deleted.deletedCount==1){
+            return res.status(200).json("user canceled order");
+        }
+        else{
+            res.status(400).json("couldn't cancel order");
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};

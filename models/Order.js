@@ -27,6 +27,10 @@ const order_schema = new mongoose.Schema({
 		type: Boolean,
 		default:false
 	},
+	pharmacyRespond:{
+		type: Boolean,
+		default:false
+	},
 	delivered :{
 		type: Boolean,
 		default:false
