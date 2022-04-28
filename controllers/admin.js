@@ -179,12 +179,36 @@ exports.approveOrder = async (req, res, next) =>{
         const pharmacy = await Pharmacy.findOne({admin:admin_id},{_id:1})
         if(type == "admin" && pharmacy){
             //add price to order and make pharmacy approval true 
-            const updated = await Order.updateOne({_id:req.body.id},{$set: { "pharmacyApproval" : true, "price":req.body.price }});
+            const updated = await Order.updateOne({_id:req.body.id},{$set: { "pharmacyApproval" : true, "price":req.body.price, "pharmacyRespond":true }});
             if(updated.matchedCount==1 && updated.modifiedCount==1){
                 return res.status(200).json("the order is approved");
             }
             else{
                 res.status(400).json("couldn't approve order");
+            }
+        }
+        else{
+           res.status(401).json("not authorized, admin action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
+
+exports.disApproveOrder = async (req, res, next) =>{
+    try {
+        const admin_id  = req.id; 
+        const type = req.type;
+        const pharmacy = await Pharmacy.findOne({admin:admin_id},{_id:1})
+        if(type == "admin" && pharmacy){
+            //delete the order so it won't appear at user or pharmacy
+            const updated = await Order.updateOne({_id:req.body.id},{$set: { "pharmacyRespond":true }});
+            if(updated.matchedCount==1 && updated.modifiedCount==1){
+                return res.status(200).json("the order is disapproved");
+            }
+            else{
+                res.status(400).json("couldn't disapprove order");
             }
         }
         else{
