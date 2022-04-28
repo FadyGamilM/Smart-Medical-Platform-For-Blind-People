@@ -236,7 +236,8 @@ exports.makeOrder = async (req,res,next) =>{
 
 exports.userCancelOrder = async (req, res, next) =>{
     try {
-        const deleted = await Order.deleteOne({_id:req.body.id});
+        const user_id  = req.id;
+        const deleted = await Order.deleteOne({_id:req.body.id, user:user_id});
         if(deleted.deletedCount==1){
             return res.status(200).json("user canceled order");
         }
