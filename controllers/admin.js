@@ -179,7 +179,7 @@ exports.approveOrder = async (req, res, next) =>{
         const pharmacy = await Pharmacy.findOne({admin:admin_id},{_id:1})
         if(type == "admin" && pharmacy){
             //add price to order and make pharmacy approval true 
-            const updated = await Order.updateOne({_id:req.body.id},{$set: { "pharmacyApproval" : true, "price":req.body.price, "pharmacyRespond":true }});
+            const updated = await Order.updateOne({_id:req.body.id,pharmacy:pharmacy},{$set: { "pharmacyApproval" : true, "price":req.body.price, "pharmacyRespond":true }});
             if(updated.matchedCount==1 && updated.modifiedCount==1){
                 return res.status(200).json("the order is approved");
             }
@@ -203,7 +203,7 @@ exports.disApproveOrder = async (req, res, next) =>{
         const pharmacy = await Pharmacy.findOne({admin:admin_id},{_id:1})
         if(type == "admin" && pharmacy){
             //delete the order so it won't appear at user or pharmacy
-            const updated = await Order.updateOne({_id:req.body.id},{$set: { "pharmacyRespond":true }});
+            const updated = await Order.updateOne({_id:req.body.id,pharmacy:pharmacy},{$set: { "pharmacyRespond":true }});
             if(updated.matchedCount==1 && updated.modifiedCount==1){
                 return res.status(200).json("the order is disapproved");
             }
@@ -227,7 +227,7 @@ exports.finishOrder = async (req, res, next) =>{
         const pharmacy = Pharmacy.findOne({admin:admin_id},{_id:1})
         if(type == "admin" && pharmacy){
             //make delivered true 
-            const updated = await Order.updateOne({_id:req.body.id},{$set: { "delivered":true }});
+            const updated = await Order.updateOne({_id:req.body.id,pharmacy:pharmacy},{$set: { "delivered":true }});
             if(updated.matchedCount==1 && updated.modifiedCount==1){
                 return res.status(200).json("done");
             }
