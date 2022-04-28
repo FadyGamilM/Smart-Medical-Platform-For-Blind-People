@@ -177,7 +177,7 @@ exports.getReservedSlots = async (req,res,next) =>{
 exports.getOrders = async (req,res,next) =>{
     try {
         const user_id  = req.id;
-        const orders = await Order.find({user:user_id},{_id:0,user:0}).populate({path: "pharmacy", select: {name:1, _id:0, address:1, telephone:1}}); 
+        const orders = await Order.find({user:user_id},{user:0}).populate({path: "pharmacy", select: {name:1, _id:0, address:1, telephone:1}}); 
         if(orders.length != 0){
             return res.status(200).json(orders);
         }
