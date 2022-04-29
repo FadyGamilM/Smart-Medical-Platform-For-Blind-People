@@ -10,12 +10,12 @@ const pharmacy_schema = new mongoose.Schema({
 	hero_photo: [String],
 	icon: String,
 	telephone: [String],
-	orders: [
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "Orders",
-		},
-	],
+	// orders: [
+	// 	{
+	// 		type: mongoose.Schema.Types.ObjectId,
+	// 		ref: "Orders",
+	// 	},
+	// ],
 });
 
 const Pharmacy = mongoose.model("Pharmacy", pharmacy_schema);

@@ -22,6 +22,31 @@ const { findOne } = require("../models/Order");
 //     }
 // }
 
+// exports.getDashboardData = async (req, res, next) => {
+//     try {
+//         const _id  = req.id; 
+//         const type = req.type;
+//         if(type == "admin"){
+//             //pie chart ( get number of hospitals & clinics & pharmacies)
+//             const clinics = await Entity.find({flag:'C'},{name:1});
+//             const hospitals = await Entity.find({flag:'H'},{name:1});
+//             const pharmacies = await Pharmacy.find({},{name:1});
+//             //get profit of each entity in each month
+//             returns={ 
+//                 clinics_Count:clinics.length,
+//                 hospitals_count:hospitals.length,
+//                 pharmacies_count:pharmacies.length};
+//             res.status(200).json("announcement has been added successfully"); 
+//         }
+//         else{
+//            res.status(401).json("not authorized, admin action only"); 
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         res.status(400).json(error.message);
+//     }
+// };
+
 exports.addAnnounce = async (req, res, next) => {
     try {
         const _id  = req.id; 
