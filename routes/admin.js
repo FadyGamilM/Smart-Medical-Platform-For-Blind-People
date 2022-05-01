@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const {addAnnounce, getAnnounce,getNewOrders,
     getPendingOrders, getApprovedOrders, getDeliveredOrders, 
-    approveOrder, finishOrder,disApproveOrder,getDashboardData,editAdminInfo} = require("../controllers/admin");
+    approveOrder, finishOrder,disApproveOrder,getDashboardData,editAdminInfo,deleteAnnounce} = require("../controllers/admin");
 const { protect } = require("../middleware/authMiddleware");
 
 router.route("/admin/announcement").post(protect,addAnnounce);
@@ -14,6 +14,7 @@ router.route("/admin/order/approve").patch(protect,approveOrder);
 router.route("/admin/order/disapprove").patch(protect,disApproveOrder);
 router.route("/admin/order/done").patch(protect,finishOrder);
 router.route("/admin/edit").patch(protect,editAdminInfo);
+router.route("/admin/announcement/delete").delete(protect,deleteAnnounce);
 //router.route("/admin/dashboard").get(protect,getDashboardData);
 
 module.exports = router;

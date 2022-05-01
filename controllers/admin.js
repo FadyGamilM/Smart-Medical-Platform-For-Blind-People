@@ -146,6 +146,28 @@ exports.addAnnounce = async (req, res, next) => {
     }
 };
 
+exports.deleteAnnounce = async (req, res, next) => {
+    try {
+        const _id  = req.id; 
+        const type = req.type;
+        if(type == "admin"){
+            const deleted = await Announce.deleteOne({'announce.title':req.body.title, owner:_id});
+            if(deleted.deletedCount==1){
+                return res.status(200).json("anouncement has been deleted successfully");
+            }
+            else{
+                res.status(400).json("couldn't delete announcement");
+            }
+        }
+        else{
+           res.status(401).json("not authorized, admin action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
+
 exports.getAnnounce = async (req, res, next) => {
     try {
         const _id  = req.id; 
