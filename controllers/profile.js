@@ -52,20 +52,23 @@ exports.getProfile = async (req, res, next) => {
             {
                 const doctor = await Doctor.findById({
                     _id,
-                }).populate({path: "entity_id", select: {name:1}}).populate(
+                }).populate({path: "entity_id", select: {name:1,arabic_name:1}}).populate(
                     {path:"patients", select:{username:1}}).populate(
                         {path:"meetings"}
                     );
-                console.log(doctor);
+                //console.log(doctor);
                 const returns = {"username": doctor.username,
+                                "arabic_username":doctor.arabic_username,
                                 "patients":doctor.patients,
                                 "profilePic":doctor.profilePic,
                                 "specialization":doctor.specialization,
+                                "arabic_specialization":doctor.arabic_specialization,
                                 "bio":doctor.bio,
                                 "meetings":doctor.meetings,
                                 "timetable":doctor.timetable,
                                 "rate":doctor.rate,
-                                "entity_name":doctor.entity_id.nameو
+                                "entity_name":doctor.entity_id.name,
+                                "arabic_entity_name":doctor.entity_id.arabic_name
                                 //clinic or hospital   
                     }
                     return res.status(200).json(returns);

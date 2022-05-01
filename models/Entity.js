@@ -6,6 +6,11 @@ const entity_schema = new mongoose.Schema({
 		required: true,
 		unique: true
 	},
+	arabic_name: {
+		type: String,
+		required: true,
+		unique: true
+	},
     icon: {
         type: String,
         default: ""

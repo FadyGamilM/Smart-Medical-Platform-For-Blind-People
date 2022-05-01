@@ -99,13 +99,18 @@ exports.getDepartmentDoctors = async (req, res, next) =>{
     try {
         const department = req.params.depName
         if(department){
-            const doctors = await Doctor.find({specialization:department},{
+            const doctors = await Doctor.find({
+                $or: [
+                  { 'specialization': department },
+                  { 'arabic_specialization': department }
+                ]},
+                {
                 _id:0,
                 password:0,
                 gender:0,
                 patients:0,
                 meetings:0
-            }).populate({path: "entity_id", select: {name:1, _id:0}});
+            }).populate({path: "entity_id", select: {name:1,arabic_name:1, _id:0}});
             if(doctors.length != 0){
                 return res.status(200).json(doctors);
             }
@@ -127,17 +132,19 @@ exports.getDoctor = async (req,res,next) =>{
     const doctor = await Doctor.findOne({email},{
         _id:0,
         username:1,
+        arabic_username:1,
         email:1,
         university:1,
         profilePic:1,
         specialization:1,
+        arabic_specialization:1,
         bio:1,
         telephone:1,
 	    timetable:1,
         reviews:1,
         rate:1,
         rate_count:1
-    }).populate({path: "entity_id", select: {name:1, _id:0, flag:1}});; 
+    }).populate({path: "entity_id", select: {name:1,arabic_name:1, _id:0, flag:1}});; 
     if(doctor){
         return res.status(200).json(doctor);
     }
@@ -177,7 +184,7 @@ exports.getReservedSlots = async (req,res,next) =>{
 exports.getOrders = async (req,res,next) =>{
     try {
         const user_id  = req.id;
-        const orders = await Order.find({user:user_id},{user:0}).populate({path: "pharmacy", select: {name:1, _id:0, address:1, telephone:1}}); 
+        const orders = await Order.find({user:user_id},{user:0}).populate({path: "pharmacy", select: {name:1,arabic_name:1, _id:0, address:1, telephone:1}}); 
         if(orders.length != 0){
             return res.status(200).json(orders);
         }

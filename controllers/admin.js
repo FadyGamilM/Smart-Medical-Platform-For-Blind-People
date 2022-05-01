@@ -47,6 +47,84 @@ const { findOne } = require("../models/Order");
 //     }
 // };
 
+//edit info of hospital or clinic or pharmacy admin
+exports.editAdminInfo = async(req,res,next) => {
+    try {
+        const _id  = req.id; 
+        const type = req.type;
+        if(type == "admin"){
+            //const entity = await Entity.findOne({name:req.body.entity_name});
+            const admin = await Admin.findOne({email:req.body.admin_email, _id:{ $ne: _id }});
+            if(admin){
+                res.status(400).json("this email already found");
+            }
+            else{
+                if(req.body.role=='owner'){
+                    const updated_admin = await Admin.updateOne({_id},{
+                        username:req.body.admin_username,
+                        email:req.body.admin_email,
+                        profilePic:req.body.admin_profilePic
+                    });
+                    res.status(400).json("something wrong happened");
+                }
+                else if(req.body.role=='p_admin'){
+                    const entity = await Pharmacy.findOne({$or: [
+                        { 'name': req.body.entity_name },
+                        { 'arabic_name': req.body.arabic_entity_name }
+                      ],admin:{ $ne: _id }});
+                    if(entity){
+                        res.status(400).json("this entity name already found");
+                    }
+                    else{
+                        const updated_admin = await Admin.updateOne({_id},{
+                            username:req.body.admin_username,
+                            email:req.body.admin_email,
+                            profilePic:req.body.admin_profilePic
+                        });
+                        const updated_entity = await Pharmacy.updateOne({admin:_id},{
+                            name:req.body.entity_name,
+                            arabic_name:req.body.arabic_entity_name,
+                            address:req.body.entity_address,
+                            telephone:req.body.entity_telephone
+                        });
+                        res.status(200).json("you edited your profile successfully");
+                    }
+                }
+                else{
+                    const entity = await Entity.findOne({$or: [
+                        { 'name': req.body.entity_name },
+                        { 'arabic_name': req.body.arabic_entity_name }
+                      ],admin:{ $ne: _id }});
+                    if(entity){
+                        res.status(400).json("this entity name already found");
+                    }
+                    else{
+                        const updated_admin = await Admin.updateOne({_id},{
+                            username:req.body.admin_username,
+                            email:req.body.admin_email,
+                            profilePic:req.body.admin_profilePic
+                        });
+                        const updated_entity = await Entity.updateOne({admin:_id},{
+                            name:req.body.entity_name,
+                            arabic_name: req.body.arabic_entity_name,
+                            address:req.body.entity_address,
+                            telephone:req.body.entity_telephone
+                        });
+                        res.status(200).json("you edited your profile successfully");
+                    }
+                }
+            }
+        }
+        else{
+           res.status(401).json("not authorized, admin action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message); 
+    }
+
+};
+
 exports.addAnnounce = async (req, res, next) => {
     try {
         const _id  = req.id; 
@@ -58,6 +136,28 @@ exports.addAnnounce = async (req, res, next) => {
                 owner:_id
             });
             res.status(200).json("announcement has been added successfully"); 
+        }
+        else{
+           res.status(401).json("not authorized, admin action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
+
+exports.deleteAnnounce = async (req, res, next) => {
+    try {
+        const _id  = req.id; 
+        const type = req.type;
+        if(type == "admin"){
+            const deleted = await Announce.deleteOne({'announce.title':req.body.title, owner:_id});
+            if(deleted.deletedCount==1){
+                return res.status(200).json("anouncement has been deleted successfully");
+            }
+            else{
+                res.status(400).json("couldn't delete announcement");
+            }
         }
         else{
            res.status(401).json("not authorized, admin action only"); 

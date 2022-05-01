@@ -4,7 +4,8 @@ const announcement_schema = new mongoose.Schema({
 
     announce:{
         title:{
-            type: String
+            type: String,
+            unique:true
         },
         description:{
             type: String

@@ -50,6 +50,7 @@ exports.getAllClinics = async (req, res, next) => {
 		const clinics = await Entity.find({flag:'C'},{
 			_id:0,
 			name:1,
+			arabic_name:1,
 			icon:1,
 			telephone:1,
 			address:1
