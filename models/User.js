@@ -65,7 +65,7 @@ user_schema.methods.isValidPassword = async function (password) {
 user_schema.statics.log = async function(email,password) {
 		const user = await this.findOne({email}).populate(
 			{path: "meetings",select:{_id:0,doctor:1,Date:1,day:1,slot:1,meeting_link:1,status:1}
-			,populate:{path:"doctor",select:{_id:0,username:1}}});
+			,populate:{path:"doctor",select:{_id:0,username:1,email:1}}});
 		if(user){
 			const auth = await bcrypt.compare(password,user.password);
 			if(auth) {

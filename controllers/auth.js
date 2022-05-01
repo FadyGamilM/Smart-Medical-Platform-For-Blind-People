@@ -103,11 +103,13 @@ exports.registerDoctor = async(req,res,next) =>{
             if(!doctorExist && !adminExist){
                 const newDoctor = await Doctor.create({
                     username:req.body.username,
+                    arabic_username:req.body.arabic_username,
                     email:req.body.email,
                     password:req.body.password,
                     gender:req.body.gender,
                     profilePic: req.body.profilePic,
                     specialization:req.body.specialization,
+                    arabic_specialization:req.body.arabic_specialization,
                     telephone:req.body.telephone,
                     entity_id:entity._id
                 });
@@ -127,7 +129,10 @@ exports.registerHadmin = async(req,res,next) =>{
     try {
         //todo
         //check if the entity already exist
-        const hospital = await Entity.findOne({name:req.body.hospitalname});
+        const hospital = await Entity.findOne({ $or:[
+            {'name':req.body.hospitalname},
+            {'arabic_name':req.body.arabic_hospitalname}
+        ]});
         const admin = await Admin.findOne({email:req.body.email});
         const doctor = await Doctor.findOne({email:req.body.email});
         if(!hospital){
@@ -144,6 +149,7 @@ exports.registerHadmin = async(req,res,next) =>{
                  //create new hospital
                 const newHospital = await Entity.create({
                 name:req.body.hospitalname,
+                arabic_name:req.body.arabic_hospitalname,
                 address:[req.body.address],
                 telephone:[req.body.telephone],
                 admin:newAdmin._id,
@@ -168,7 +174,10 @@ exports.registerCadmin = async(req,res,next) =>{
     try {
         //todo
         //check if the entity already exist
-        const clinic = await Entity.findOne({name:req.body.clinicname});
+        const clinic = await Entity.findOne({ $or:[
+            {'name':req.body.clinicname},
+            {'arabic_name':req.body.arabic_clinicname}
+        ]});
         const admin = await Admin.findOne({email:req.body.email});
         const doctor = await Doctor.findOne({email:req.body.email});
         if(!clinic){
@@ -185,6 +194,7 @@ exports.registerCadmin = async(req,res,next) =>{
                 //create new clnic
                 const newClinic = await Entity.create({
                     name:req.body.clinicname,
+                    arabic_name:req.body.arabic_clinicname,
                     address:[req.body.address],
                     telephone:[req.body.telephone],
                     admin:newAdmin._id,
@@ -208,7 +218,10 @@ exports.registerPadmin = async(req,res,next) =>{
     try {
         //todo
         //check if the entity already exist
-        const pharmacy = await Entity.findOne({name:req.body.pharmacyname});
+        const pharmacy = await Entity.findOne({ $or:[
+            {'name':req.body.pharmacyname},
+            {'arabic_name':req.body.arabic_pharmacyname}
+        ]});
         const admin = await Admin.findOne({email:req.body.email});
         const doctor = await Doctor.findOne({email:req.body.email});
         if(!pharmacy ){
@@ -225,6 +238,7 @@ exports.registerPadmin = async(req,res,next) =>{
                 //create new pharmacy
                 const newPharmacy = await Pharmacy.create({
                     name:req.body.pharmacyname,
+                    arabic_name:req.body.arabic_pharmacyname,
                     address:[req.body.address],
                     telephone:[req.body.telephone],
                     admin:newAdmin._id
@@ -404,7 +418,7 @@ exports.loginDoctorApp = async(req,res,next) => {
             const doctor = await Doctor.findOne({email}).populate(
                 {path: "entity_id", select: {name:1,_id:0, flag:1}}).populate(
                 {path: "meetings",select:{_id:0,user:1,Date:1,day:1,slot:1,meeting_link:1,status:1}
-                ,populate:{path:"user",select:{_id:0,username:1}}});
+                ,populate:{path:"user",select:{_id:0,username:1,email:1}}});
             if(!doctor){
                 throw Error("incorrect email");
             }

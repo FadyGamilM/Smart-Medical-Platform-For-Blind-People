@@ -42,6 +42,7 @@ exports.getAllPharmacies = async (req, res, next) => {
 		const pharmacies = await Pharmacy.find({},{
 			_id:0,
 			name:1,
+			arabic_name:1,
 			icon:1,
 			telephone:1,
 			address:1

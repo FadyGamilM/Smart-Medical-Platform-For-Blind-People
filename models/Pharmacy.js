@@ -5,7 +5,16 @@ const pharmacy_schema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "Entity_Admin",
 	},
-	name:String,
+	name:{
+		type: String,
+		required: true,
+		unique: true
+	},
+	arabic_name: {
+		type: String,
+		required: true,
+		unique: true
+	},
 	address: [String],
 	hero_photo: [String],
 	icon: String,

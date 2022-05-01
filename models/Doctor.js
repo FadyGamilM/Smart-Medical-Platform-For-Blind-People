@@ -7,6 +7,9 @@ const doctor_schema = new mongoose.Schema({
 	username: {
 		type: String,
 	},
+	arabic_username: {
+		type: String,
+	},
 	email: {
 		type: String,
 		required: true,
@@ -43,6 +46,9 @@ const doctor_schema = new mongoose.Schema({
 		},
 	],
 	specialization: {
+		type: String,
+	},
+	arabic_specialization: {
 		type: String,
 	},
 	bio: {

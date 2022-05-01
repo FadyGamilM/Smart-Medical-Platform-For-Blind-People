@@ -37,7 +37,10 @@ const Entity = require("../models/Entity");
 exports.getDoctorsOfEntity = async (req, res, next) => {
     try {
         const entityName = req.params.entity;
-        const entity = await Entity.findOne({name:entityName});
+        const entity = await Entity.findOne({$or: [
+            { 'name': entityName },
+            { 'arabic_name': entityName }
+          ]});
         if(entity){
             const doctors = await Doctor.find({entity_id:entity._id},{
                 _id:0,
