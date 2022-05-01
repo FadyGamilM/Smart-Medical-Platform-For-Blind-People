@@ -4,7 +4,9 @@ const Entity = require("../models/Entity");
 const Pharmacy = require("../models/Pharmacy");
 const Announce = require("../models/Announcement");
 const Order = require("../models/Order");
+const Meeting = require("../models/Meeting");
 const { findOne } = require("../models/Order");
+const Entity_Admin = require("../models/Entity_Admin");
 
 //const Announcement = require("../models/Announcement");
 //this must be protected 
@@ -189,6 +191,56 @@ exports.getAnnounce = async (req, res, next) => {
     }
 };
 
+exports.getAppointments = async (req,res,next) => {
+    try {
+        //const _id  = req.id; 
+        const type = req.type;
+        if(type == "admin"){
+            const appointments = await Meeting.find({},{_id:0}).populate(
+                {path:"doctor",select:{username:1,email:1,_id:0},
+            populate:{path:"entity_id",select:{name:1,_id:0}}}).populate(
+                {path:"user",select:{username:1,email:1,_id:0}});
+            if(appointments.length==0){
+                res.status(200).json("no appointments available");
+            }
+            else{
+                res.status(200).json(appointments);
+            }
+        }
+        else{
+            res.status(401).json("not authorized, admin action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
+
+exports.getAllOrders = async (req,res,next) => {
+    try {
+        //const _id  = req.id; 
+        const type = req.type;
+        if(type == "admin"){
+            const orders = await Order.find({},{_id:0,order_data:1,price:1,pharmacy:1,user:1}).populate(
+                {path:"pharmacy",select:{name:1,admin:1,_id:0},
+                populate:{path:"admin",select:{username:1,email:1,_id:0}}}).populate(
+                {path:"user",select:{username:1,email:1,_id:0}});
+            if(orders.length==0){
+                res.status(200).json("no orders available");
+            }
+            else{
+                res.status(200).json(orders);
+            }
+        }
+        else{
+            res.status(401).json("not authorized, admin action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
+
 exports.getNewOrders = async (req, res, next) =>{
     try {
         const admin_id  = req.id; 
@@ -362,6 +414,34 @@ exports.finishOrder = async (req, res, next) =>{
         }
         else{
            res.status(401).json("not authorized, admin action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
+
+exports.getAppointmentsOfentity = async (req,res,next) => {
+    try {
+        const _id  = req.id; 
+        const type = req.type;
+        if(type == "admin"){
+            //const entity = await Entity.findOne({admin:_id},{_id:1});
+            const entity = await Entity.findOne({name:req.params.entity},{_id:1});
+            const doctors = await Doctor.find({entity_id:entity},{_id:1});
+            const appointments = await Meeting.find({doctor:{ $in: doctors}},{_id:0}).populate(
+                {path:"doctor",select:{username:1,email:1,_id:0},
+            populate:{path:"entity_id",select:{name:1,_id:0}}}).populate(
+                {path:"user",select:{username:1,email:1,_id:0}});
+            if(appointments.length==0){
+                res.status(200).json("no appointments available");
+            }
+            else{
+                res.status(200).json(appointments);
+            }
+        }
+        else{
+            res.status(401).json("not authorized, admin action only"); 
         }
     } catch (error) {
         console.log(error);
