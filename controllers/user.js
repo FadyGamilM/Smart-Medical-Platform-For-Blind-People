@@ -332,3 +332,23 @@ exports.editHistory = async (req,res,next) => {
         res.status(400).json(error.message);
     }
 };
+
+// exports.editPassword = async (req,res,next) => {
+//     try {
+//         const user_id  = req.id;
+//         //const valid = await User.isValidPassword()
+//         //const auth = await bcrypt.compare(password,user.password);
+//         const updated = await User.updateOne({_id:user_id},{
+//             password: req.body.password
+//         });
+//         if(updated.matchedCount==1 && updated.modifiedCount==1){
+//             return res.status(200).json("you edited your history successfully");
+//         }
+//         else{
+//             res.status(400).json("no change");
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         res.status(400).json(error.message);
+//     }
+// };

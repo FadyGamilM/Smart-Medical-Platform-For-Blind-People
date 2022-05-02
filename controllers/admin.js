@@ -67,7 +67,13 @@ exports.editAdminInfo = async(req,res,next) => {
                         email:req.body.admin_email,
                         profilePic:req.body.admin_profilePic
                     });
-                    res.status(400).json("something wrong happened");
+<<<<<<< Updated upstream
+                    //res.status(400).json("something wrong happened");
+                    res.status(200).json("you edited your profile successfully");
+=======
+                    res.status(200).json("you edited your profile successfully");
+                    //res.status(400).json("something wrong happened");
+>>>>>>> Stashed changes
                 }
                 else if(req.body.role=='p_admin'){
                     const entity = await Pharmacy.findOne({$or: [
@@ -248,7 +254,7 @@ exports.getNewOrders = async (req, res, next) =>{
         const pharmacy = await Pharmacy.findOne({admin:admin_id},{_id:1})
         if(type == "admin" && pharmacy){
             //get orders where user and pharmacy approvals both are false
-            const orders = await Order.find({pharmacy,userApproval:false,pharmacyApproval:false},
+            const orders = await Order.find({pharmacy,userApproval:false,pharmacyApproval:false,pharmacyRespond:false},
                 {order_data:1,price:1,user:1}).populate(
                 {path:"user", 
                 select: {_id:0,username:1,email:1,profilePic:1}});
@@ -275,7 +281,7 @@ exports.getPendingOrders = async (req, res, next) =>{
         const pharmacy = await Pharmacy.findOne({admin:admin_id},{_id:1})
         if(type == "admin" && pharmacy){
             //get orders where user and pharmacy approvals both are false
-            const orders = await Order.find({pharmacy,userApproval:false,pharmacyApproval:true},
+            const orders = await Order.find({pharmacy,userApproval:false,pharmacyApproval:true,pharmacyRespond:true},
                 {order_data:1,price:1,user:1}).populate(
                 {path:"user", 
                 select: {_id:0,username:1,email:1,profilePic:1}});

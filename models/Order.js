@@ -31,6 +31,10 @@ const order_schema = new mongoose.Schema({
 		type: Boolean,
 		default:false
 	},
+	userRespond:{
+		type: Boolean,
+		default:false
+	},
 	delivered :{
 		type: Boolean,
 		default:false
