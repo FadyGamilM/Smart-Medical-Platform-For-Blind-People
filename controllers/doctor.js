@@ -120,3 +120,63 @@ exports.setTimeTable = async (req, res, next) =>{
 //         return res.status(400).json(error.message);
 //     }
 // };
+
+exports.editDoctorInfo = async (req,res,next) => {
+    try {
+            //"username":"",
+            //"arabic_username":"",
+            //"email":"",
+            //"gender":"",
+            //"dateOfBirth":"",
+            //"bio":"",
+            //"telephone":""
+        const doctor_id  = req.id;
+        if(req.body.email){
+            const doctor = await Doctor.findOne({email:req.body.email, _id:{ $ne: doctor_id }});
+            if(doctor){
+                res.status(400).json("this email already found");
+            }
+            else{
+                const update=req.body;
+                const updated = await Doctor.updateOne({_id:doctor_id},update);
+                if(updated.matchedCount==1 && updated.modifiedCount==1){
+                    return res.status(200).json("you edited your info successfully");
+                }
+                else{
+                    res.status(400).json("no change");
+                }
+            }
+        }
+        else{
+            const update=req.body;
+            const updated = await Doctor.updateOne({_id:doctor_id},update);
+            if(updated.matchedCount==1 && updated.modifiedCount==1){
+                return res.status(200).json("you edited your info successfully");
+            }
+            else{
+                res.status(400).json("no change");
+            }
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
+
+exports.editDoctorPhoto = async (req,res,next) => {
+    try {
+        const doctor_id  = req.id;
+        const updated = await Doctor.updateOne({_id:doctor_id},{
+            profilePic: req.body.profilePic
+        });
+        if(updated.matchedCount==1 && updated.modifiedCount==1){
+            return res.status(200).json("you edited your profile successfully");
+        }
+        else{
+            res.status(400).json("no change");
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};

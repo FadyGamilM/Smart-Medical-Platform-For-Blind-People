@@ -256,3 +256,79 @@ exports.userCancelOrder = async (req, res, next) =>{
         res.status(400).json(error.message);
     }
 };
+
+exports.editInfo = async (req,res,next) => {
+    try {
+            //"username":"",
+            //"email":"",
+            //"blood":""
+            //"gender":"",
+            //"dateOfBirth":"",
+        const user_id  = req.id;
+        if(req.body.email){
+            const user = await User.findOne({email:req.body.email, _id:{ $ne: user_id }});
+            if(user){
+                res.status(400).json("this email already found");
+            }
+            else{
+                const update=req.body;
+                const updated = await User.updateOne({_id:user_id},update);
+                if(updated.matchedCount==1 && updated.modifiedCount==1){
+                    return res.status(200).json("you edited your info successfully");
+                }
+                else{
+                    res.status(400).json("no change");
+                }
+            }
+        }
+        else{
+            const update=req.body;
+            const updated = await User.updateOne({_id:user_id},update);
+            if(updated.matchedCount==1 && updated.modifiedCount==1){
+                return res.status(200).json("you edited your info successfully");
+            }
+            else{
+                res.status(400).json("no change");
+            }
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
+
+exports.editPhoto = async (req,res,next) => {
+    try {
+        const user_id  = req.id;
+        const updated = await User.updateOne({_id:user_id},{
+            profilePic: req.body.profilePic
+        });
+        if(updated.matchedCount==1 && updated.modifiedCount==1){
+            return res.status(200).json("you edited your profile successfully");
+        }
+        else{
+            res.status(400).json("no change");
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
+
+exports.editHistory = async (req,res,next) => {
+    try {
+        const user_id  = req.id;
+        const updated = await User.updateOne({_id:user_id},{
+            history: req.body.history
+        });
+        if(updated.matchedCount==1 && updated.modifiedCount==1){
+            return res.status(200).json("you edited your history successfully");
+        }
+        else{
+            res.status(400).json("no change");
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};

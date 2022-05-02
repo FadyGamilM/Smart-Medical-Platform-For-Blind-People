@@ -2,7 +2,8 @@ const router = require("express").Router();
 
 const { rateDoctor, getDepartmentDoctors, getDoctor,
         addReview, reserve, getReservedSlots, 
-        getOrders, makeOrder,userCancelOrder} = require("../controllers/user");
+        getOrders, makeOrder,userCancelOrder,
+        editPhoto,editHistory,editInfo} = require("../controllers/user");
 const { protect } = require("../middleware/authMiddleware");
 
 router.route("/user/rating/doctor/:doctorname").patch(rateDoctor);//rate doctor
@@ -14,5 +15,8 @@ router.route("/user/timetable/:doctorname/:date").get(getReservedSlots);//get re
 router.route("/user/orders").get(protect,getOrders);//get orders of this user
 router.route("/user/pharmacy/order").post(protect,makeOrder);
 router.route("/user/order/cancel").delete(protect,userCancelOrder);
+router.route("/user/edit/photo").patch(protect,editPhoto);
+router.route("/user/edit/history").patch(protect,editHistory);
+router.route("/user/edit/info").patch(protect,editInfo);
 
 module.exports = router;
