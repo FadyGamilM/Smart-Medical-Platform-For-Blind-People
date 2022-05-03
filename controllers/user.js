@@ -264,6 +264,8 @@ exports.editInfo = async (req,res,next) => {
             //"blood":""
             //"gender":"",
             //"dateOfBirth":"",
+            //"phone":"",
+            //"address":"",
         const user_id  = req.id;
         if(req.body.email){
             const user = await User.findOne({email:req.body.email, _id:{ $ne: user_id }});

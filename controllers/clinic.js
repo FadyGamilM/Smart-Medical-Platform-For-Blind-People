@@ -61,3 +61,15 @@ exports.getAllClinics = async (req, res, next) => {
         res.status(400).json(error.message);
 	}
 };
+
+exports.ClinicsArabic = async (req, res, next) => {
+	try {
+		const clinics = await Entity.find({flag:'C'},{
+			_id:0,
+			arabic_name:1,});
+		return res.status(200).json(clinics);
+	} catch (error) {
+		console.log(error);
+        res.status(400).json(error.message);
+	}
+};

@@ -11,7 +11,7 @@ const order_schema = new mongoose.Schema({
 	},
 	order_data: {
 		form: String,
-		Date: Date,
+		Date: String,
 		address: String,
 		phone:String
 	},

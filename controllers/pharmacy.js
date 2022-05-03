@@ -53,3 +53,16 @@ exports.getAllPharmacies = async (req, res, next) => {
         res.status(400).json(error.message);
 	}
 };
+
+exports.PharmaciesArabic = async (req, res, next) => {
+	try {
+		const pharmacies = await Pharmacy.find({},{
+			_id:0,
+			arabic_name:1,
+		});
+		return res.status(200).json(pharmacies);
+	} catch (error) {
+		console.log(error);
+        res.status(400).json(error.message);
+	}
+};
