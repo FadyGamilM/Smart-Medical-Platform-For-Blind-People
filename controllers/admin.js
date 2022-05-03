@@ -67,6 +67,7 @@ exports.editAdminInfo = async(req,res,next) => {
                         email:req.body.admin_email,
                         profilePic:req.body.admin_profilePic
                     });
+
                     res.status(200).json("you edited your profile successfully");
                     //res.status(400).json("something wrong happened");
                 }
@@ -171,6 +172,30 @@ exports.deleteAnnounce = async (req, res, next) => {
     }
 };
 
+exports.editAnnounce = async (req, res, next) => {
+    try {
+        const _id  = req.id; 
+        const type = req.type;
+        if(type == "admin"){
+            const updated = await Announce.updateOne({'announce.title':req.body.title, owner:_id},{
+                'announce.description':req.body.description
+            });
+            if(updated.matchedCount==1 && updated.modifiedCount==1){
+                return res.status(200).json("anouncement has been updated successfully");
+            }
+            else{
+                res.status(400).json("no change");
+            }
+        }
+        else{
+           res.status(401).json("not authorized, admin action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
+
 exports.getAnnounce = async (req, res, next) => {
     try {
         const _id  = req.id; 
@@ -242,6 +267,7 @@ exports.getAllOrders = async (req,res,next) => {
     }
 };
 
+//just created orders 
 exports.getNewOrders = async (req, res, next) =>{
     try {
         const admin_id  = req.id; 
@@ -249,7 +275,11 @@ exports.getNewOrders = async (req, res, next) =>{
         const pharmacy = await Pharmacy.findOne({admin:admin_id},{_id:1})
         if(type == "admin" && pharmacy){
             //get orders where user and pharmacy approvals both are false
-            const orders = await Order.find({pharmacy,userApproval:false,pharmacyApproval:false,pharmacyRespond:false},
+            const orders = await Order.find({pharmacy,
+                userApproval:false,
+                pharmacyApproval:false,
+                pharmacyRespond:false,
+                userRespond:false},
                 {order_data:1,price:1,user:1}).populate(
                 {path:"user", 
                 select: {_id:0,username:1,email:1,profilePic:1}});
@@ -269,6 +299,7 @@ exports.getNewOrders = async (req, res, next) =>{
     }
 };
 
+//pharmacy approved and added price and witing for user response
 exports.getPendingOrders = async (req, res, next) =>{
     try {
         const admin_id  = req.id; 
@@ -276,7 +307,11 @@ exports.getPendingOrders = async (req, res, next) =>{
         const pharmacy = await Pharmacy.findOne({admin:admin_id},{_id:1})
         if(type == "admin" && pharmacy){
             //get orders where user and pharmacy approvals both are false
-            const orders = await Order.find({pharmacy,userApproval:false,pharmacyApproval:true,pharmacyRespond:true},
+            const orders = await Order.find({pharmacy,
+                userApproval:false,
+                pharmacyApproval:true,
+                pharmacyRespond:true,
+                userRespond:false},
                 {order_data:1,price:1,user:1}).populate(
                 {path:"user", 
                 select: {_id:0,username:1,email:1,profilePic:1}});
@@ -296,6 +331,7 @@ exports.getPendingOrders = async (req, res, next) =>{
     }
 };
 
+//user approved and pharmacy will prepare order for user
 exports.getApprovedOrders = async (req, res, next) =>{
     try {
         const admin_id  = req.id; 
@@ -303,7 +339,12 @@ exports.getApprovedOrders = async (req, res, next) =>{
         const pharmacy = await Pharmacy.findOne({admin:admin_id},{_id:1})
         if(type == "admin" && pharmacy){
             //get orders where user and pharmacy approvals both are false
-            const orders = await Order.find({pharmacy,userApproval:true,pharmacyApproval:true,delivered:false},
+            const orders = await Order.find({pharmacy,
+                userApproval:true,
+                pharmacyApproval:true,
+                pharmacyRespond:true,
+                delivered:false,
+                userRespond:true},
                 {order_data:1,price:1,user:1}).populate(
                 {path:"user", 
                 select: {_id:0,username:1,email:1,profilePic:1}});
@@ -323,6 +364,7 @@ exports.getApprovedOrders = async (req, res, next) =>{
     }
 };
 
+//delivered orders and orders canceled by pharmacy
 exports.getDeliveredOrders = async (req, res, next) =>{
     try {
         const admin_id  = req.id; 
@@ -330,7 +372,9 @@ exports.getDeliveredOrders = async (req, res, next) =>{
         const pharmacy = await Pharmacy.findOne({admin:admin_id},{_id:1})
         if(type == "admin" && pharmacy){
             //get orders where user and pharmacy approvals both are false
-            const orders = await Order.find({pharmacy,delivered:true},
+            const orders = await Order.find({pharmacy,$or: [
+                { delivered:true },
+                { pharmacyRespond:true,pharmacyApproval:false }]},
                 {order_data:1,price:1,user:1}).populate(
                 {path:"user", 
                 select: {_id:0,username:1,email:1,profilePic:1}});

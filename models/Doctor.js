@@ -51,9 +51,7 @@ const doctor_schema = new mongoose.Schema({
 	arabic_specialization: {
 		type: String,
 	},
-	bio: {
-		description: String,
-	},
+	bio: String,
 	telephone: [String],
 	timetable: [
 		{

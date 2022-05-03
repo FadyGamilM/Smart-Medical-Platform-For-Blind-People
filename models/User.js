@@ -33,15 +33,21 @@ const user_schema = new mongoose.Schema({
 	history: {
 		type:String
 	},
-	googleId: {
-		type: String,
-	},
+	// googleId: {
+	// 	type: String,
+	// },
 	dateOfBirth:{
-		type: Date
+		type: String
 	},
 	blood:{
 		type: String,
 		default: "unknown"
+	},
+	address:{
+		type:String
+	},
+	phone:{
+		type:String
 	}
 });
 //fire a function before saving document to db

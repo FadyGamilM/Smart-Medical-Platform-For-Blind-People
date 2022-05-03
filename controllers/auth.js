@@ -58,7 +58,12 @@ exports.registerUser = async(req,res,next) =>{
                 email:req.body.email,
                 password:req.body.password,
                 gender:req.body.gender,
-                profilePic: req.body.profilePic
+                profilePic: req.body.profilePic,
+                history:req.body.history,
+                dateOfBirth:req.body.dateOfBirth,
+                blood:req.body.blood,
+                address:req.body.address,
+                phone:req.body.phone
             });
             const token = createToken(newUser._id, "user");
             const returns = {
@@ -70,6 +75,8 @@ exports.registerUser = async(req,res,next) =>{
                 history:newUser.history,
                 dateOfBirth:newUser.dateOfBirth,
                 blood:newUser.blood,
+                address:newUser.address,
+                phone:newUser.phone,
                 token
             };
             return res.status(200).json(returns);
@@ -401,6 +408,8 @@ exports.loginUserApp = async(req,res,next) => {
             history:user.history,
             dateOfBirth:user.dateOfBirth,
             blood:user.blood,
+            address:user.address,
+            phone:user.phone,
             token
         };
         return res.status(200).json(returns);

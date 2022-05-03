@@ -180,3 +180,15 @@ exports.editDoctorPhoto = async (req,res,next) => {
         res.status(400).json(error.message);
     }
 };
+
+exports.DoctorsArabic = async (req, res, next) => {
+	try {
+		const doctors = await Doctor.find({},{
+			_id:0,
+			arabic_username:1,});
+		return res.status(200).json(doctors);
+	} catch (error) {
+		console.log(error);
+        res.status(400).json(error.message);
+	}
+};

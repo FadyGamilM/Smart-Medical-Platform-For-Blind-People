@@ -1,7 +1,7 @@
 const router = require("express").Router();
 
 const { getDoctorsOfEntity, setTimeTable,editDoctorInfo,
-    editDoctorPhoto } = require("../controllers/doctor");
+    editDoctorPhoto,DoctorsArabic } = require("../controllers/doctor");
 const { protect } = require("../middleware/authMiddleware");
 //router.route("/doctor/rating").patch(rateDoctor);//rate doctor
 //router.route("/user/rating/doctor/doctorname").patch(rateDoctor);//rate doctor mogoda f el user routes
@@ -12,5 +12,5 @@ router.route("/entity/:entity/doctors").get(getDoctorsOfEntity);// doctors in en
 router.route("/doctor/timetable").patch(protect,setTimeTable);
 router.route("/doctor/edit/info").patch(protect,editDoctorInfo);
 router.route("/doctor/edit/photo").patch(protect,editDoctorPhoto);
-
+router.route("/doctors/arabic").get(DoctorsArabic);
 module.exports = router;
