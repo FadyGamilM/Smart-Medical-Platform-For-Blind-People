@@ -67,8 +67,9 @@ exports.editAdminInfo = async(req,res,next) => {
                         email:req.body.admin_email,
                         profilePic:req.body.admin_profilePic
                     });
-                    //res.status(400).json("something wrong happened");
+
                     res.status(200).json("you edited your profile successfully");
+                    //res.status(400).json("something wrong happened");
                 }
                 else if(req.body.role=='p_admin'){
                     const entity = await Pharmacy.findOne({$or: [
