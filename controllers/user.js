@@ -20,9 +20,11 @@ exports.rateDoctor = async (req, res, next) =>{
         //console.log("ratingCount",ratingCount);
         //((old Rating * Rating count) + new Rating) / (Rating count + 1)
         const newRate = ((oldRating * ratingCount) + newRating) / (ratingCount + 1);
-        //console.log("newRate",newRate);
+        const rate = Math.round(newRate);
+        //console.log("newRate: ",newRate);
+        //console.log("Rate: ",rate);
         //console.log(typeof newRate);
-        const updated = await Doctor.updateOne({email},{ $set: { "rate" : newRate }, $inc: { "rate_count": 1 } });
+        const updated = await Doctor.updateOne({email},{ $set: { "rate" : rate }, $inc: { "rate_count": 1 } });
         // const updated = await Doctor.findByIdAndUpdate( 
         // {_id:doctorId},
         // {$set: { "rate" : ((this.rate * this.rate_count) + newRating) / (this.rate_count + 1) }, $inc: { "rate_count": 1 }}
@@ -111,7 +113,7 @@ exports.getDepartmentDoctors = async (req, res, next) =>{
                 gender:0,
                 patients:0,
                 meetings:0
-            }).populate({path: "entity_id", select: {name:1,arabic_name:1, _id:0}});
+            }).populate({path: "entity_id", select: {name:1,arabic_name:1, _id:0}}).sort({rate:-1});//sort doctors by rate in descending order
             if(doctors.length != 0){
                 return res.status(200).json(doctors);
             }
