@@ -4,6 +4,7 @@ const Admin = require("../models/Entity_Admin");
 const Meeting = require("../models/Meeting");
 const User = require("../models/User");
 const Order = require("../models/Order");
+const Prescription = require("../models/Prescription");
 
 exports.rateDoctor = async (req, res, next) =>{
     try {
@@ -126,6 +127,7 @@ exports.getDepartmentDoctors = async (req, res, next) =>{
         return res.status(400).json(error.message);
     }
 };
+
 exports.getDoctor = async (req,res,next) =>{
  try {
     const email = req.params.doctorname; 
@@ -156,6 +158,7 @@ exports.getDoctor = async (req,res,next) =>{
     return res.status(400).json(error.message); 
  }
 };
+
 exports.getReservedSlots = async (req,res,next) =>{
     try {
         const doctor_id = await Doctor.findOne({email:req.params.doctorname},{_id:1});
@@ -181,6 +184,7 @@ exports.getReservedSlots = async (req,res,next) =>{
         return res.status(400).json(error.message); 
     }
 };
+
 exports.getOrders = async (req,res,next) =>{
     try {
         const user_id  = req.id;
@@ -196,6 +200,23 @@ exports.getOrders = async (req,res,next) =>{
         return res.status(400).json(error.message); 
     }
 };
+
+exports.getPrescriptions = async (req,res,next) =>{
+    try {
+        const user_id  = req.id;
+        const prescriptions = await Prescription.find({user:user_id},{_id:0,user:0}).populate({path: "doctor", select: {username:1,arabic_username:1, _id:0, email:1}}); 
+        if(prescriptions.length != 0){
+            return res.status(200).json(prescriptions);
+        }
+        else{
+            return res.status(200).json("you have no prescriptions yet");
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json(error.message); 
+    }
+};
+
 exports.makeOrder = async (req,res,next) =>{
     try {
         const user_id  = req.id;

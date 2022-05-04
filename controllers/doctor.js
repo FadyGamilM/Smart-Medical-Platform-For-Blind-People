@@ -1,5 +1,8 @@
 const Doctor = require("../models/Doctor");
 const Entity = require("../models/Entity");
+const Prescription = require("../models/Prescription");
+const User = require("../models/User");
+
 
 // exports.rateDoctor = async (req, res, next) =>{
 //     try {
@@ -96,7 +99,7 @@ exports.setTimeTable = async (req, res, next) =>{
         console.log(error);
         return res.status(400).json(error.message);
     }
-}
+};
 // exports.addReview = async (req, res, next) => {
 //     try {
 //         //todo: add review to certain doctor by his id
@@ -192,3 +195,28 @@ exports.DoctorsArabic = async (req, res, next) => {
         res.status(400).json(error.message);
 	}
 };
+
+exports.savePrescription = async (req, res, next) =>{
+    try {
+        const _id  = req.id; 
+        const type = req.type;
+        if(type == "doctor"){
+            
+            const user = await User.findOne({email:req.body.user_email},{_id:1});
+            const prescription = await Prescription.create({
+                user:user,
+                doctor:_id,
+                medicines:req.body.medicines,
+                Date: new Date()
+            });
+            res.status(200).json("prescription has been saved");
+
+        }
+        else{
+           res.status(401).json("not authorized, doctor action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json(error.message);
+    }
+}
