@@ -30,21 +30,21 @@ const doctor_schema = new mongoose.Schema({
 	university:{
 		type:String
 	},
-	patients: [
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "User",
-		},
-	],
+	// patients: [
+	// 	{
+	// 		type: mongoose.Schema.Types.ObjectId,
+	// 		ref: "User",
+	// 	},
+	// ],
 	profilePic: {
 		type: String,
 	},
-	meetings: [
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "Meeting",
-		},
-	],
+	// meetings: [
+	// 	{
+	// 		type: mongoose.Schema.Types.ObjectId,
+	// 		ref: "Meeting",
+	// 	},
+	// ],
 	specialization: {
 		type: String,
 	},

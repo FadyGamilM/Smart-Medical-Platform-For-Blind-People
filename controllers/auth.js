@@ -59,7 +59,7 @@ exports.registerUser = async(req,res,next) =>{
                 password:req.body.password,
                 gender:req.body.gender,
                 profilePic: req.body.profilePic,
-                history:req.body.history,
+                //history:req.body.history,
                 dateOfBirth:req.body.dateOfBirth,
                 blood:req.body.blood,
                 address:req.body.address,
@@ -404,7 +404,7 @@ exports.loginUserApp = async(req,res,next) => {
             email:user.email,
             profilePic:user.profilePic,
             gender:user.gender,
-            meetings:user.meetings,
+            //meetings:user.meetings,
             history:user.history,
             dateOfBirth:user.dateOfBirth,
             blood:user.blood,
@@ -425,9 +425,8 @@ exports.loginDoctorApp = async(req,res,next) => {
         const admin = await Admin.findOne({email});
         if(!admin){
             const doctor = await Doctor.findOne({email}).populate(
-                {path: "entity_id", select: {name:1,arabic_name:1,_id:0, flag:1}}).populate(
-                {path: "meetings",select:{_id:0,user:1,Date:1,day:1,slot:1,meeting_link:1,status:1}
-                ,populate:{path:"user",select:{_id:0,username:1,email:1}}});
+                {path: "entity_id", select: {name:1,arabic_name:1,_id:0, flag:1}});
+                //.populate({path: "meetings",select:{_id:0,user:1,Date:1,day:1,slot:1,meeting_link:1,status:1},populate:{path:"user",select:{_id:0,username:1,email:1}}});
             if(!doctor){
                 throw Error("incorrect email");
             }
@@ -438,12 +437,14 @@ exports.loginDoctorApp = async(req,res,next) => {
                     const token = createToken(doctor._id,"doctor");
                     const returns = {
                         username:doctor.username,
+                        arabic_username:doctor.arabic_username,
                         email:doctor.email,
                         profilePic:doctor.profilePic,
                         gender:doctor.gender,
                         university:doctor.university,
-                        meetings:doctor.meetings,
+                        //meetings:doctor.meetings,
                         specialization:doctor.specialization,
+                        arabic_specialization:doctor.arabic_specialization,
                         bio:doctor.bio,
                         reviews:doctor.reviews,
                         telephone: [String],

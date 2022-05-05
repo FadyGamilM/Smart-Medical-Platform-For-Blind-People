@@ -111,8 +111,9 @@ exports.getDepartmentDoctors = async (req, res, next) =>{
                 _id:0,
                 password:0,
                 gender:0,
-                patients:0,
-                meetings:0
+                dateOfBirth:0
+                //patients:0,
+                //meetings:0
             }).populate({path: "entity_id", select: {name:1,arabic_name:1, _id:0}}).sort({rate:-1});//sort doctors by rate in descending order
             if(doctors.length != 0){
                 return res.status(200).json(doctors);
@@ -202,6 +203,57 @@ exports.getOrders = async (req,res,next) =>{
         return res.status(400).json(error.message); 
     }
 };
+
+exports.getAppointments = async (req,res,next) =>{
+    try {
+        const user_id  = req.id;
+        const meetings = await Meeting.find({user:user_id},{user:0,_id:0}).populate(
+            {path: "doctor", select: {username:1,arabic_username:1,email:1, _id:0}}); 
+        if(meetings.length != 0){
+            return res.status(200).json(meetings);
+        }
+        else{
+            return res.status(200).json("you have no meetings yet");
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json(error.message); 
+    }
+};
+
+// exports.getAppointmentsArabic = async (req,res,next) =>{
+//     try {
+//         const user_id  = req.id;
+//         const meetings = await Meeting.find({user:user_id},{user:0,_id:0}).populate(
+//             {path: "doctor", select: {arabic_username:1, _id:0}}); 
+//         if(meetings.length != 0){
+//             return res.status(200).json(meetings);
+//         }
+//         else{
+//             return res.status(200).json("you have no meetings yet");
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         return res.status(400).json(error.message); 
+//     }
+// };
+
+// exports.getOrdersArabic = async (req,res,next) =>{
+//     try {
+//         const user_id  = req.id;
+//         const orders = await Order.find({user:user_id},{user:0}).populate(
+//             {path: "pharmacy", select: {arabic_name:1, _id:0}}); 
+//         if(orders.length != 0){
+//             return res.status(200).json(orders);
+//         }
+//         else{
+//             return res.status(200).json("you have no orders yet");
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         return res.status(400).json(error.message); 
+//     }
+// };
 
 exports.getPrescriptions = async (req,res,next) =>{
     try {
@@ -343,9 +395,8 @@ exports.editPhoto = async (req,res,next) => {
 exports.editHistory = async (req,res,next) => {
     try {
         const user_id  = req.id;
-        const updated = await User.updateOne({_id:user_id},{
-            history: req.body.history
-        });
+        const update=req.body;
+        const updated = await User.updateOne({_id:user_id},update );
         if(updated.matchedCount==1 && updated.modifiedCount==1){
             return res.status(200).json("you edited your history successfully");
         }
