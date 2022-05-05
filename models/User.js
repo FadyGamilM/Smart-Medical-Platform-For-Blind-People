@@ -24,20 +24,35 @@ const user_schema = new mongoose.Schema({
 	profilePic: {
 		type: String,
 	},
-	meetings: [
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "Meeting",
-		},
-	],
+	// meetings: [
+	// 	{
+	// 		type: mongoose.Schema.Types.ObjectId,
+	// 		ref: "Meeting",
+	// 	},
+	// ],
 	history: {
-		type:String
+		surgeries:{
+			type:String,
+			default:""},
+		diseases :{
+			type:String,
+			default:""},
+		family_history :{
+			type:String,
+			default:""},
+		medications :{
+			type:String,
+			default:""},
 	},
 	// googleId: {
 	// 	type: String,
 	// },
 	dateOfBirth:{
 		type: String
+	},
+	age:{
+		type:Number
+	    //{ $dateDiff: { startDate: "$dateOfBirth", endDate: "$$NOW", unit: "year" } } }
 	},
 	blood:{
 		type: String,
@@ -54,6 +69,14 @@ const user_schema = new mongoose.Schema({
 user_schema.pre('save', async function(next){
 	const salt = await bcrypt.genSalt();
 	this.password = await bcrypt.hash(this.password, salt);
+	// /// to set age of user
+	// if(this.dateOfBirth){
+	// 	const dateArr= this.dateOfBirth.split("/")
+	// 	const year=parseInt(dateArr[2])
+	// 	const d = new Date();
+	// 	const current_year = d.getFullYear()
+	// 	this.age = current_year - year;
+	// }
 	next();
 });
 

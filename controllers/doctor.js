@@ -1,41 +1,10 @@
 const Doctor = require("../models/Doctor");
 const Entity = require("../models/Entity");
+const Meeting = require("../models/Meeting");
 const Prescription = require("../models/Prescription");
 const User = require("../models/User");
 
 
-// exports.rateDoctor = async (req, res, next) =>{
-//     try {
-//         const doctorId = req.body.id;
-//         const newRating = req.body.rating;
-//         //console.log("newrating=",newRating);
-//         //console.log(typeof newRating);
-//         const doctor = await Doctor.findById({_id:doctorId},{rate:1, rate_count:1});
-//         const oldRating = doctor.rate;
-//         const ratingCount = doctor.rate_count;
-//         //console.log("oldRating",oldRating);
-//         //console.log("ratingCount",ratingCount);
-//         //((old Rating * Rating count) + new Rating) / (Rating count + 1)
-//         const newRate = ((oldRating * ratingCount) + newRating) / (ratingCount + 1);
-//         //console.log("newRate",newRate);
-//         //console.log(typeof newRate);
-//         const updated = await Doctor.updateOne({_id:doctorId},{ $set: { "rate" : newRate }, $inc: { "rate_count": 1 } });
-//         // const updated = await Doctor.findByIdAndUpdate( 
-//         // {_id:doctorId},
-//         // {$set: { "rate" : ((this.rate * this.rate_count) + newRating) / (this.rate_count + 1) }, $inc: { "rate_count": 1 }}
-//         // );
-    
-//         if(updated.matchedCount==1 && updated.modifiedCount==1){
-//             return res.status(200).json("successfull rating");
-//         }
-//         else{
-//             res.status(400).json("couldn't update");
-//         }
-//     } catch (error) {
-//         console.log(error);
-//         return res.status(400).json(error.message);
-//     }
-// };
 
 exports.getDoctorsOfEntity = async (req, res, next) => {
     try {
@@ -49,8 +18,8 @@ exports.getDoctorsOfEntity = async (req, res, next) => {
                 _id:0,
                 password:0,
                 gender:0,
-                patients:0,
-                meetings:0,
+                //patients:0,
+                //meetings:0,
                 entity_id:0
             });
             if(doctors.length != 0){
@@ -100,17 +69,6 @@ exports.setTimeTable = async (req, res, next) =>{
         return res.status(400).json(error.message);
     }
 };
-// exports.addReview = async (req, res, next) => {
-//     try {
-//         //todo: add review to certain doctor by his id
-//         const doctorId = req.body.id;
-//         const doctor = await Doctor.findById({_id:doctorId},{rate:1, rate_count:1});
-
-//     } catch (error) {
-//         console.log(error);
-//         return res.status(400).json(error.message);
-//     }
-// };
 
 // exports.getReview = async (req, res, next) => {
 //     try {
@@ -219,4 +177,27 @@ exports.savePrescription = async (req, res, next) =>{
         console.log(error);
         return res.status(400).json(error.message);
     }
-}
+};
+
+exports.getMeetings = async (req,res,next) =>{
+    try {
+        const doctor_id  = req.id; 
+        const type = req.type;
+        if(type == "doctor"){
+            const meetings = await Meeting.find({doctor:doctor_id},{doctor:0,_id:0}).populate(
+                {path: "user", select: {username:1,email:1, _id:0}}); 
+            if(meetings.length != 0){
+                return res.status(200).json(meetings);
+            }
+            else{
+                return res.status(200).json("you have no meetings yet");
+            }
+        }
+        else{
+           res.status(401).json("not authorized, doctor action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json(error.message); 
+    }
+};

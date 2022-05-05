@@ -5,8 +5,7 @@ const Pharmacy = require("../models/Pharmacy");
 const Announce = require("../models/Announcement");
 const Order = require("../models/Order");
 const Meeting = require("../models/Meeting");
-const { findOne } = require("../models/Order");
-const Entity_Admin = require("../models/Entity_Admin");
+
 
 //const Announcement = require("../models/Announcement");
 //this must be protected 
@@ -216,6 +215,35 @@ exports.getAnnounce = async (req, res, next) => {
         res.status(400).json(error.message);
     }
 };
+
+// exports.getAgeOfUsers = async (req, res, next) => {
+//     try {
+//         const _id  = req.id; 
+//         const type = req.type;
+//         if(type == "admin"){
+//             //pie chart ( get number of hospitals & clinics & pharmacies)
+//             //const clinics = await Entity.find({flag:'C'},{name:1});
+//             //const hospitals = await Entity.find({flag:'H'},{name:1});
+//             //const pharmacies = await Pharmacy.find({},{name:1});
+//             //get profit of each entity in each month
+
+//             //find all users and group by year od dateOfBirth
+//             //{$group : {_id:"$position", count:{$sum:1}}}
+//             const users = await User.find({},{_id:0,gender:1}).group({_id:"$age", count:{$sum:1}});
+//             // returns={ 
+//             //     clinics_Count:clinics.length,
+//             //     hospitals_count:hospitals.length,
+//             //     pharmacies_count:pharmacies.length};
+//             // res.status(200).json("announcement has been added successfully"); 
+//         }
+//         else{
+//            res.status(401).json("not authorized, admin action only"); 
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         res.status(400).json(error.message);
+//     }
+// };
 
 exports.getAppointments = async (req,res,next) => {
     try {
