@@ -4,7 +4,8 @@ const { rateDoctor, getDepartmentDoctors, getDoctor,
         addReview, reserve, getReservedSlots, 
         getOrders, makeOrder,userCancelOrder,
         editPhoto,editHistory,editInfo,
-        getPrescriptions,getOrdersArabic,getAppointmentsArabic,getAppointments} = require("../controllers/user");
+        getPrescriptions,getOrdersArabic,getAppointmentsArabic
+        ,getAppointments,getOrderByDate} = require("../controllers/user");
 const { protect } = require("../middleware/authMiddleware");
 
 router.route("/user/rating/doctor/:doctorname").patch(rateDoctor);//rate doctor
@@ -23,5 +24,5 @@ router.route("/user/order/cancel").delete(protect,userCancelOrder);
 router.route("/user/edit/photo").patch(protect,editPhoto);
 router.route("/user/edit/history").patch(protect,editHistory);
 router.route("/user/edit/info").patch(protect,editInfo);
-
+router.route("/user/order/:pharmacy/:date").get(protect,getOrderByDate);
 module.exports = router;

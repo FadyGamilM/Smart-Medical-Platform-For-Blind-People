@@ -204,6 +204,27 @@ exports.getOrders = async (req,res,next) =>{
     }
 };
 
+exports.getOrderByDate = async (req,res,next) =>{
+    try {
+        const user_id  = req.id;
+        const date = req.params.date
+        const pharma = req.params.pharmacy
+        const order = await Order.find({user:user_id,"order_data.Date":date},{user:0}).populate(
+            {path: "pharmacy", 
+            select: {name:1,arabic_name:1, _id:0, address:1, telephone:1},
+            match:{arabic_name:pharma}}); 
+        if(order.length != 0){
+            return res.status(200).json(order);
+        }
+        else{
+            return res.status(200).json("you have no orders yet");
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json(error.message); 
+    }
+};
+
 exports.getAppointments = async (req,res,next) =>{
     try {
         const user_id  = req.id;
