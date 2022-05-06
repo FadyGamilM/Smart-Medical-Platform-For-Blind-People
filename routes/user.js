@@ -2,7 +2,7 @@ const router = require("express").Router();
 
 const { rateDoctor, getDepartmentDoctors, getDoctor,
         addReview, reserve, getReservedSlots, 
-        getOrders, makeOrder,userCancelOrder,
+        getOrders, makeOrder,userCancelOrder,userApproveOrder,
         editPhoto,editHistory,editInfo,
         getPrescriptions,getOrdersArabic,getAppointmentsArabic
         ,getAppointments,getOrderByDate} = require("../controllers/user");
@@ -20,7 +20,8 @@ router.route("/user/orders").get(protect,getOrders);//get orders of this user
 router.route("/user/meetings").get(protect,getAppointments);
 router.route("/user/prescriptions").get(protect,getPrescriptions);//get prescriptions of this user
 router.route("/user/pharmacy/order").post(protect,makeOrder);
-router.route("/user/order/cancel").delete(protect,userCancelOrder);
+router.route("/user/order/cancel").patch(protect,userCancelOrder);
+router.route("/user/order/approve").patch(protect,userApproveOrder);
 router.route("/user/edit/photo").patch(protect,editPhoto);
 router.route("/user/edit/history").patch(protect,editHistory);
 router.route("/user/edit/info").patch(protect,editInfo);

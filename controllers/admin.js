@@ -245,6 +245,7 @@ exports.getAnnounce = async (req, res, next) => {
 //     }
 // };
 
+//admin of app gets all meetings and their status
 exports.getAppointments = async (req,res,next) => {
     try {
         //const _id  = req.id; 
@@ -270,6 +271,7 @@ exports.getAppointments = async (req,res,next) => {
     }
 };
 
+//admin of app gets all orders and their status
 exports.getAllOrders = async (req,res,next) => {
     try {
         //const _id  = req.id; 
@@ -295,39 +297,7 @@ exports.getAllOrders = async (req,res,next) => {
     }
 };
 
-//just created orders 
-exports.getNewOrders = async (req, res, next) =>{
-    try {
-        const admin_id  = req.id; 
-        const type = req.type;
-        const pharmacy = await Pharmacy.findOne({admin:admin_id},{_id:1})
-        if(type == "admin" && pharmacy){
-            //get orders where user and pharmacy approvals both are false
-            const orders = await Order.find({pharmacy,
-                userApproval:false,
-                pharmacyApproval:false,
-                pharmacyRespond:false,
-                userRespond:false},
-                {order_data:1,price:1,user:1}).populate(
-                {path:"user", 
-                select: {_id:0,username:1,email:1,profilePic:1}});
-            if(orders.length != 0){
-                res.status(200).json(orders); 
-            }
-            else{
-                res.status(200).json("there is no new orders"); 
-            }
-        }
-        else{
-           res.status(401).json("not authorized, admin action only"); 
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(400).json(error.message);
-    }
-};
-
-//pharmacy approved and added price and witing for user response
+//get pending orders that waiting pharmacy approval
 exports.getPendingOrders = async (req, res, next) =>{
     try {
         const admin_id  = req.id; 
@@ -335,12 +305,13 @@ exports.getPendingOrders = async (req, res, next) =>{
         const pharmacy = await Pharmacy.findOne({admin:admin_id},{_id:1})
         if(type == "admin" && pharmacy){
             //get orders where user and pharmacy approvals both are false
-            const orders = await Order.find({pharmacy,
-                userApproval:false,
-                pharmacyApproval:true,
-                pharmacyRespond:true,
-                userRespond:false},
-                {order_data:1,price:1,user:1}).populate(
+            const orders = await Order.find({pharmacy,status:"pending"
+                // userApproval:false,
+                // pharmacyApproval:false,
+                // pharmacyRespond:false,
+                // userRespond:false
+            },
+                {order_data:1,price:1,user:1,status:1}).populate(
                 {path:"user", 
                 select: {_id:0,username:1,email:1,profilePic:1}});
             if(orders.length != 0){
@@ -355,11 +326,11 @@ exports.getPendingOrders = async (req, res, next) =>{
         }
     } catch (error) {
         console.log(error);
-        res.status(400).json(error.message); 
+        res.status(400).json(error.message);
     }
 };
 
-//user approved and pharmacy will prepare order for user
+//pharmacy approved and added price and witing for user response
 exports.getApprovedOrders = async (req, res, next) =>{
     try {
         const admin_id  = req.id; 
@@ -367,13 +338,13 @@ exports.getApprovedOrders = async (req, res, next) =>{
         const pharmacy = await Pharmacy.findOne({admin:admin_id},{_id:1})
         if(type == "admin" && pharmacy){
             //get orders where user and pharmacy approvals both are false
-            const orders = await Order.find({pharmacy,
-                userApproval:true,
-                pharmacyApproval:true,
-                pharmacyRespond:true,
-                delivered:false,
-                userRespond:true},
-                {order_data:1,price:1,user:1}).populate(
+            const orders = await Order.find({pharmacy,status:"approved"
+                // userApproval:false,
+                // pharmacyApproval:true,
+                // pharmacyRespond:true,
+                // userRespond:false
+            },
+                {order_data:1,price:1,user:1,status:1}).populate(
                 {path:"user", 
                 select: {_id:0,username:1,email:1,profilePic:1}});
             if(orders.length != 0){
@@ -388,21 +359,25 @@ exports.getApprovedOrders = async (req, res, next) =>{
         }
     } catch (error) {
         console.log(error);
-        res.status(400).json(error.message);
+        res.status(400).json(error.message); 
     }
 };
 
-//delivered orders and orders canceled by pharmacy
-exports.getDeliveredOrders = async (req, res, next) =>{
+//user approved and pharmacy will prepare order for user
+exports.getPreparingOrders = async (req, res, next) =>{
     try {
         const admin_id  = req.id; 
         const type = req.type;
         const pharmacy = await Pharmacy.findOne({admin:admin_id},{_id:1})
         if(type == "admin" && pharmacy){
             //get orders where user and pharmacy approvals both are false
-            const orders = await Order.find({pharmacy,$or: [
-                { delivered:true },
-                { pharmacyRespond:true,pharmacyApproval:false }]},
+            const orders = await Order.find({pharmacy,status:"preparing"
+                // userApproval:true,
+                // pharmacyApproval:true,
+                // pharmacyRespond:true,
+                // delivered:false,
+                // userRespond:true
+            },
                 {order_data:1,price:1,user:1}).populate(
                 {path:"user", 
                 select: {_id:0,username:1,email:1,profilePic:1}});
@@ -410,7 +385,7 @@ exports.getDeliveredOrders = async (req, res, next) =>{
                 res.status(200).json(orders); 
             }
             else{
-                res.status(200).json("there is no delivered orders"); 
+                res.status(200).json("there is no preparing orders"); 
             }
         }
         else{
@@ -422,6 +397,38 @@ exports.getDeliveredOrders = async (req, res, next) =>{
     }
 };
 
+//delivered orders and orders canceled by pharmacy as well as orders cancelled by user
+exports.getHistory = async (req, res, next) =>{
+    try {
+        const admin_id  = req.id; 
+        const type = req.type;
+        const pharmacy = await Pharmacy.findOne({admin:admin_id},{_id:1})
+        if(type == "admin" && pharmacy){
+            //get orders where user and pharmacy approvals both are false
+            const orders = await Order.find({pharmacy,$or: [
+                { status:"disapproved" },
+                { status:"cancelled" },
+                { status:"delivered" }]},
+                {order_data:1,price:1,user:1,status:1}).populate(
+                {path:"user", 
+                select: {_id:0,username:1,email:1,profilePic:1}});
+            if(orders.length != 0){
+                res.status(200).json(orders); 
+            }
+            else{
+                res.status(200).json("there is no history"); 
+            }
+        }
+        else{
+           res.status(401).json("not authorized, admin action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
+
+//pharmacy admin approve order and add price
 exports.approveOrder = async (req, res, next) =>{
     try {
         const admin_id  = req.id; 
@@ -429,7 +436,8 @@ exports.approveOrder = async (req, res, next) =>{
         const pharmacy = await Pharmacy.findOne({admin:admin_id},{_id:1})
         if(type == "admin" && pharmacy){
             //add price to order and make pharmacy approval true 
-            const updated = await Order.updateOne({_id:req.body.id,pharmacy:pharmacy},{$set: { "pharmacyApproval" : true, "price":req.body.price, "pharmacyRespond":true }});
+            const updated = await Order.updateOne({_id:req.body.id,pharmacy:pharmacy},
+                {$set:{"price":req.body.price,"status":"approved"} });//{ "pharmacyApproval" : true, "price":req.body.price, "pharmacyRespond":true }
             if(updated.matchedCount==1 && updated.modifiedCount==1){
                 return res.status(200).json("the order is approved");
             }
@@ -452,8 +460,8 @@ exports.disApproveOrder = async (req, res, next) =>{
         const type = req.type;
         const pharmacy = await Pharmacy.findOne({admin:admin_id},{_id:1})
         if(type == "admin" && pharmacy){
-            //delete the order so it won't appear at user or pharmacy
-            const updated = await Order.updateOne({_id:req.body.id,pharmacy:pharmacy},{$set: { "pharmacyRespond":true }});
+            const updated = await Order.updateOne({_id:req.body.id,pharmacy:pharmacy},
+                {$set: { "status":"disapproved"}});//{"pharmacyRespond":true }
             if(updated.matchedCount==1 && updated.modifiedCount==1){
                 return res.status(200).json("the order is disapproved");
             }
@@ -474,10 +482,10 @@ exports.finishOrder = async (req, res, next) =>{
     try {
         const admin_id  = req.id; 
         const type = req.type;
-        const pharmacy = Pharmacy.findOne({admin:admin_id},{_id:1})
+        const pharmacy = await Pharmacy.findOne({admin:admin_id},{_id:1})
         if(type == "admin" && pharmacy){
-            //make delivered true 
-            const updated = await Order.updateOne({_id:req.body.id,pharmacy:pharmacy},{$set: { "delivered":true }});
+            const updated = await Order.updateOne({_id:req.body.id,pharmacy:pharmacy},
+                {$set:{ "status":"delivered"} });//{ "delivered":true }
             if(updated.matchedCount==1 && updated.modifiedCount==1){
                 return res.status(200).json("done");
             }

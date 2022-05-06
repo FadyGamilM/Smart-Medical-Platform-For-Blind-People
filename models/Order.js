@@ -19,26 +19,30 @@ const order_schema = new mongoose.Schema({
 		type: Number,
 		default:null
 	},
-	userApproval:{
-		type: Boolean,
-		default:false
-	},
-	pharmacyApproval:{
-		type: Boolean,
-		default:false
-	},
-	pharmacyRespond:{
-		type: Boolean,
-		default:false
-	},
-	userRespond:{
-		type: Boolean,
-		default:false
-	},
-	delivered :{
-		type: Boolean,
-		default:false
+	status:{
+		type:String
+		//pending, approved, preparing, disapproved, cancelled, delivered
 	}
+	// userApproval:{
+	// 	type: Boolean,
+	// 	default:false
+	// },
+	// pharmacyApproval:{
+	// 	type: Boolean,
+	// 	default:false
+	// },
+	// pharmacyRespond:{
+	// 	type: Boolean,
+	// 	default:false
+	// },
+	// userRespond:{
+	// 	type: Boolean,
+	// 	default:false
+	// },
+	// delivered :{
+	// 	type: Boolean,
+	// 	default:false
+	// }
 });
 
 const Order = mongoose.model("Order", order_schema);
