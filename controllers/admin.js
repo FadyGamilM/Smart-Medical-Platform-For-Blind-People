@@ -277,7 +277,7 @@ exports.getAllOrders = async (req,res,next) => {
         //const _id  = req.id; 
         const type = req.type;
         if(type == "admin"){
-            const orders = await Order.find({},{_id:0,order_data:1,price:1,pharmacy:1,user:1}).populate(
+            const orders = await Order.find({},{_id:0,order_data:1,price:1,pharmacy:1,user:1,status:1}).populate(
                 {path:"pharmacy",select:{name:1,admin:1,_id:0},
                 populate:{path:"admin",select:{username:1,email:1,_id:0}}}).populate(
                 {path:"user",select:{username:1,email:1,_id:0}});
