@@ -191,7 +191,8 @@ exports.getReservedSlots = async (req,res,next) =>{
 exports.getOrders = async (req,res,next) =>{
     try {
         const user_id  = req.id;
-        const orders = await Order.find({user:user_id},{user:0}).populate({path: "pharmacy", select: {name:1,arabic_name:1, _id:0, address:1, telephone:1}}); 
+        const orders = await Order.find({user:user_id,status:{ $ne: "cancelled" }},{user:0}).populate(
+            {path: "pharmacy", select: {name:1,arabic_name:1, _id:0, address:1, telephone:1}}); 
         if(orders.length != 0){
             return res.status(200).json(orders);
         }
@@ -307,6 +308,7 @@ exports.makeOrder = async (req,res,next) =>{
                 address:req.body.address,
                 phone:req.body.phone
                 },
+                status:"pending"
             });
             return res.status(200).json("order added successfully");
         }
@@ -320,28 +322,30 @@ exports.makeOrder = async (req,res,next) =>{
     }
 };
 
-// exports.userApproveOrder = async (req, res, next) =>{
-//     try {
-//         //checkout (payment api)
-//         const updated = await Order.updateOne({_id:req.body.id},{$set: { "userApproval" : true }});
-//         if(updated.matchedCount==1 && updated.modifiedCount==1){
-//             return res.status(200).json("user approved order");
-//         }
-//         else{
-//             res.status(400).json("couldn't approve order");
-//         }
-
-//     } catch (error) {
-//         console.log(error);
-//         res.status(400).json(error.message);
-//     }
-// };
+exports.userApproveOrder = async (req, res, next) =>{
+    try {
+        //checkout (payment api)
+        const user_id  = req.id;
+        const updated = await Order.updateOne({_id:req.body.id, user:user_id},
+            {$set:{ "status":"preparing"}});// { "userApproval" : true }
+        if(updated.matchedCount==1 && updated.modifiedCount==1){
+            return res.status(200).json("user approved order");
+        }
+        else{
+            res.status(400).json("couldn't approve order");
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
 
 exports.userCancelOrder = async (req, res, next) =>{
     try {
         const user_id  = req.id;
-        const deleted = await Order.deleteOne({_id:req.body.id, user:user_id});
-        if(deleted.deletedCount==1){
+        const updated = await Order.updateOne({_id:req.body.id, user:user_id},
+            {$set:{ "status":"cancelled"} });
+        if(updated.matchedCount==1 && updated.modifiedCount==1){
             return res.status(200).json("user canceled order");
         }
         else{
