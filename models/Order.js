@@ -22,6 +22,9 @@ const order_schema = new mongoose.Schema({
 	status:{
 		type:String
 		//pending, approved, preparing, disapproved, cancelled, delivered
+	},
+	comment:{
+		type:String
 	}
 	// userApproval:{
 	// 	type: Boolean,

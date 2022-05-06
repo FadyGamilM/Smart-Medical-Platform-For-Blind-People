@@ -277,7 +277,7 @@ exports.getAllOrders = async (req,res,next) => {
         //const _id  = req.id; 
         const type = req.type;
         if(type == "admin"){
-            const orders = await Order.find({},{_id:0,order_data:1,price:1,pharmacy:1,user:1,status:1}).populate(
+            const orders = await Order.find({},{_id:0}).populate(
                 {path:"pharmacy",select:{name:1,admin:1,_id:0},
                 populate:{path:"admin",select:{username:1,email:1,_id:0}}}).populate(
                 {path:"user",select:{username:1,email:1,_id:0}});
@@ -460,13 +460,25 @@ exports.disApproveOrder = async (req, res, next) =>{
         const type = req.type;
         const pharmacy = await Pharmacy.findOne({admin:admin_id},{_id:1})
         if(type == "admin" && pharmacy){
-            const updated = await Order.updateOne({_id:req.body.id,pharmacy:pharmacy},
-                {$set: { "status":"disapproved"}});//{"pharmacyRespond":true }
-            if(updated.matchedCount==1 && updated.modifiedCount==1){
-                return res.status(200).json("the order is disapproved");
+            if(req.body.comment){
+                const updated = await Order.updateOne({_id:req.body.id,pharmacy:pharmacy},
+                    {$set: { "status":"disapproved", "comment":req.body.comment}});//{"pharmacyRespond":true }
+                if(updated.matchedCount==1 && updated.modifiedCount==1){
+                    return res.status(200).json("the order is disapproved");
+                }
+                else{
+                    res.status(400).json("couldn't disapprove order");
+                }
             }
             else{
-                res.status(400).json("couldn't disapprove order");
+                const updated = await Order.updateOne({_id:req.body.id,pharmacy:pharmacy},
+                    {$set: { "status":"disapproved"}});//{"pharmacyRespond":true }
+                if(updated.matchedCount==1 && updated.modifiedCount==1){
+                    return res.status(200).json("the order is disapproved");
+                }
+                else{
+                    res.status(400).json("couldn't disapprove order");
+                }
             }
         }
         else{
