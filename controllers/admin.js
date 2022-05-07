@@ -436,13 +436,25 @@ exports.approveOrder = async (req, res, next) =>{
         const pharmacy = await Pharmacy.findOne({admin:admin_id},{_id:1})
         if(type == "admin" && pharmacy){
             //add price to order and make pharmacy approval true 
-            const updated = await Order.updateOne({_id:req.body.id,pharmacy:pharmacy},
-                {$set:{"price":req.body.price,"status":"approved"} });//{ "pharmacyApproval" : true, "price":req.body.price, "pharmacyRespond":true }
-            if(updated.matchedCount==1 && updated.modifiedCount==1){
-                return res.status(200).json("the order is approved");
+            if(req.body.comment){
+                const updated = await Order.updateOne({_id:req.body.id,pharmacy:pharmacy},
+                    {$set:{"price":req.body.price,"status":"approved", "comment":req.body.comment} });//{ "pharmacyApproval" : true, "price":req.body.price, "pharmacyRespond":true }
+                if(updated.matchedCount==1 && updated.modifiedCount==1){
+                    return res.status(200).json("the order is approved");
+                }
+                else{
+                    res.status(400).json("couldn't approve order");
+                }
             }
             else{
-                res.status(400).json("couldn't approve order");
+                const updated = await Order.updateOne({_id:req.body.id,pharmacy:pharmacy},
+                    {$set:{"price":req.body.price,"status":"approved"} });//{ "pharmacyApproval" : true, "price":req.body.price, "pharmacyRespond":true }
+                if(updated.matchedCount==1 && updated.modifiedCount==1){
+                    return res.status(200).json("the order is approved");
+                }
+                else{
+                    res.status(400).json("couldn't approve order");
+                }
             }
         }
         else{

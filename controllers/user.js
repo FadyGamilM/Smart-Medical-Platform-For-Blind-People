@@ -302,6 +302,7 @@ exports.makeOrder = async (req,res,next) =>{
             const newOrder = await Order.create({
                 pharmacy: pharmacy,
                 user: user_id,
+                flag:req.body.flag,
                 order_data: {
                 form:req.body.form ,
                 Date:req.body.date,

@@ -469,24 +469,58 @@ exports.loginDoctorApp = async(req,res,next) => {
             if(valid){
                 //login admin
                 const token = createToken(admin._id,"admin");
-                const entity = await Entity.findOne({admin:admin._id},{
-                    _id:0,
-                    name:1,
-                    arabic_name:1,
-                    address:1,
-                    telephone:1,
-                    icon:1
-                });
-                const returns = {
-                    username:admin.username,
-                    email:admin.email,
-                    gender:admin.gender,
-                    profilePic:admin.profilePic,
-                    role:admin.role,
-                    entity,
-                    token
-                };
-                return res.status(200).json(returns);
+                //if p_admin return pharmacy name
+                if(admin.role =="p_admin"){
+                    const entity = await Pharmacy.findOne({admin:admin._id},{
+                        _id:0,
+                        name:1,
+                        arabic_name:1,
+                        address:1,
+                        telephone:1,
+                        icon:1
+                    });
+                    const returns = {
+                        username:admin.username,
+                        email:admin.email,
+                        gender:admin.gender,
+                        profilePic:admin.profilePic,
+                        role:admin.role,
+                        entity,
+                        token
+                    };
+                    return res.status(200).json(returns);
+                }
+                else if(admin.role =="owner"){
+                    const returns = {
+                        username:admin.username,
+                        email:admin.email,
+                        gender:admin.gender,
+                        profilePic:admin.profilePic,
+                        role:admin.role,
+                        token
+                    };
+                    return res.status(200).json(returns);
+                }
+                else{
+                    const entity = await Entity.findOne({admin:admin._id},{
+                        _id:0,
+                        name:1,
+                        arabic_name:1,
+                        address:1,
+                        telephone:1,
+                        icon:1
+                    });
+                    const returns = {
+                        username:admin.username,
+                        email:admin.email,
+                        gender:admin.gender,
+                        profilePic:admin.profilePic,
+                        role:admin.role,
+                        entity,
+                        token
+                    };
+                    return res.status(200).json(returns);
+                }
             }
             else{
                 throw Error("incorrect password");

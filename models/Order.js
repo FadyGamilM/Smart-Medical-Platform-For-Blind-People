@@ -9,6 +9,10 @@ const order_schema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: "User",
 	},
+	flag:{
+		type:String
+		//form or img
+	},
 	order_data: {
 		form: String,
 		Date: String,
