@@ -23,6 +23,7 @@ const user_schema = new mongoose.Schema({
 	},
 	profilePic: {
 		type: String,
+		default:""
 	},
 	// meetings: [
 	// 	{
@@ -48,7 +49,8 @@ const user_schema = new mongoose.Schema({
 	// 	type: String,
 	// },
 	dateOfBirth:{
-		type: String
+		type: String,
+		default:""
 	},
 	age:{
 		type:Number
@@ -56,13 +58,15 @@ const user_schema = new mongoose.Schema({
 	},
 	blood:{
 		type: String,
-		default: "unknown"
+		default: ""
 	},
 	address:{
-		type:String
+		type:String,
+		default:""
 	},
 	phone:{
-		type:String
+		type:String,
+		default:""
 	}
 });
 //fire a function before saving document to db

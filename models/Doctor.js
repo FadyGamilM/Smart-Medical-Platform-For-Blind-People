@@ -25,10 +25,12 @@ const doctor_schema = new mongoose.Schema({
 		enum: ["Male", "Female"],
 	},
 	dateOfBirth:{
-		type: Date
+		type: String,
+		default:""
 	},
 	university:{
-		type:String
+		type:String,
+		default:""
 	},
 	// patients: [
 	// 	{
@@ -38,6 +40,7 @@ const doctor_schema = new mongoose.Schema({
 	// ],
 	profilePic: {
 		type: String,
+		default:""
 	},
 	// meetings: [
 	// 	{
@@ -51,7 +54,10 @@ const doctor_schema = new mongoose.Schema({
 	arabic_specialization: {
 		type: String,
 	},
-	bio: String,
+	bio: {
+		type:String,
+		default:""
+	},
 	telephone: [String],
 	timetable: [
 		{
