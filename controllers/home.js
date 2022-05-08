@@ -9,13 +9,12 @@ exports.getHomeData = async (req, res, next) => {
 		// (1) fetch all required info about doctors
 		// NOTE, i am not gonna fetch the whole document, only the required fields we need for home page and the _id will be fetched by default so if they clicked on any doctor card they can access his/her _id
 		// this is called projection in mongodb DB
-		let doctors = await Doctor.find(
+		let doctors = await Doctor.find({},
+				// rate: {
+				// 	$gte: 4,
+				// }
 			{
-				rate: {
-					$gte: 4,
-				}
-			},
-			{
+				_id:0,
 				username: 1,
 				arabic_username:1,
 				profilePic: 1,
@@ -27,11 +26,11 @@ exports.getHomeData = async (req, res, next) => {
 				rate: 1
 				//entity_id: 1,
 			}
-		).populate({path: "entity_id", select: {name:1,arabic_name:1}});
+		).populate({path: "entity_id", select: {name:1,arabic_name:1}}).sort({rate:-1}).limit(10);
         let announcements = await Announce.find({},{
 			_id:0,
 			owner:0
-		});
+		}).sort({issuedAt:-1}).limit(5);//issuedAt
         //{issuedAt:{ $gt: , $lt: }} lo 3aia a7dd el date bta3 el announcements
         // lo 5alena el announcements ll admins kolhom yb2a hna hnrg3 el announcement bta3t el owner bs
 		// (2) return the response to client

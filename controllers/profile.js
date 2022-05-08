@@ -93,3 +93,22 @@ exports.getProfile = async (req, res, next) => {
         return res.status(400).json(error.message);
 	}
 };
+
+exports.getUserProfile = async (req, res, next) => {
+    try {
+        const email = req.params.userEmail; 
+        const user = await User.findOne({email},{
+            _id:0,
+            password:0
+        });
+        if(user){
+            return res.status(200).json(user);
+        }
+        else{
+            return res.status(400).json("User not found ");
+        }
+     } catch (error) {
+        console.log(error);
+        return res.status(400).json(error.message); 
+     }
+}
