@@ -24,7 +24,11 @@ const entity_schema = new mongoose.Schema({
     flag:{
 		type: String,
 		enum:['H','C']
-    }
+    },
+	active:{
+		type:Boolean,
+		default:true
+	}
 
 });
 

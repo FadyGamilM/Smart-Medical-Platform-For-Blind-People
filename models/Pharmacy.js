@@ -19,6 +19,10 @@ const pharmacy_schema = new mongoose.Schema({
 	hero_photo: [String],
 	icon: String,
 	telephone: [String],
+	active:{
+		type:Boolean,
+		default:true
+	}
 	// orders: [
 	// 	{
 	// 		type: mongoose.Schema.Types.ObjectId,

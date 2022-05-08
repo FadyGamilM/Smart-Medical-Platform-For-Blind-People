@@ -553,3 +553,95 @@ exports.getAppointmentsOfentity = async (req,res,next) => {
         res.status(400).json(error.message);
     }
 };
+
+// exports.deactivateEntity = async (req,res,next) =>{
+//     try {
+//         const _id  = req.id; 
+//         const type = req.type;
+//         if(type == "admin"){
+
+//             res.status(200).json("Entity is deactivated"); 
+//         }
+//         else{
+//            res.status(401).json("not authorized, admin action only"); 
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         res.status(400).json(error.message);
+//     }
+// };
+
+// exports.deactivatePharmacy = async (req,res,next) =>{
+//     try {
+//         const _id  = req.id; 
+//         const type = req.type;
+//         if(type == "admin"){
+
+//             res.status(200).json("Pharmacy is deactivated"); 
+//         }
+//         else{
+//            res.status(401).json("not authorized, admin action only"); 
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         res.status(400).json(error.message);
+//     }
+// };
+
+// exports.deactivateDoctor = async (req,res,next) =>{
+//     try {
+//         const _id  = req.id; 
+//         const type = req.type;
+//         const email = req.body.email;
+//         if(type == "admin"){
+//             //get id of this doctor we want to delete
+//             const doctor = await Doctor.findOne({email},{_id:1});
+//             //find pending meetings of this doctor and cancel them 
+//             //and return to user cobon or money hey paid 
+//             const pending_meetings = await Meeting.find({doctor,status:"pending"},{_id:1});
+//             if(pending_meetings.length == 0){
+//                 //check if there are meeings with status:"today"
+//                 const today_meetings = await Meeting.find({doctor,status:"today"},{_id:1});
+//                 if(today_meetings.length == 0){
+//                     //deactivate doctor
+//                     const deactivated = await Doctor.updateOne({email},{active:false});
+//                     if(deactivated.matchedCount==1 && deactivated.modifiedCount==1){
+//                         return res.status(200).json("Doctor is deactivated");
+//                     }else{
+//                         returnres.status(400).json("couldn't deactivate doctor");
+//                     }
+//                 }
+//                 else{
+//                     //deal with today meetings
+//                     const deactivated = await Doctor.updateOne({email},{active:false});
+//                     if(deactivated.matchedCount==1 && deactivated.modifiedCount==1){
+//                         res.status(200).json("Doctor is deactivated");
+//                     }else{
+//                         res.status(400).json("couldn't deactivate doctor");
+//                     }
+//                 }
+//             }
+//             else{
+//                 //cancel these meetings
+//                 const cancelled_meeting = await Meeting.updateMany({_id:{$in:pending_meetings}},{status:"cancelled"});
+//                 if((cancelled_meeting.matchedCount > 0) && (cancelled_meeting.matchedCount==cancelled_meeting.modifiedCount)){
+
+//                 }
+//                 const today_meetings = await Meeting.find({doctor,status:"today"},{_id:1});
+//                 if(today_meetings == 0){
+
+//                 }
+//                 else{
+                    
+//                 }
+//             }
+//             //res.status(200).json("Doctor is deactivated"); 
+//         }
+//         else{
+//            res.status(401).json("not authorized, admin action only"); 
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         res.status(400).json(error.message);
+//     }
+// };

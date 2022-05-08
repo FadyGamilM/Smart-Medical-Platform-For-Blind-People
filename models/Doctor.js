@@ -80,6 +80,10 @@ const doctor_schema = new mongoose.Schema({
 		required: true,
 		ref: "Entity",
 	},
+	active:{
+		type:Boolean,
+		default:true
+	}
 });
 //fire a function before saving document to db
 doctor_schema.pre('save', async function(next){

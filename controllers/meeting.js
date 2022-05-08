@@ -1,6 +1,14 @@
 // // import models
 // const {Meeting} = require("../models/Meeting");
 
+// exports.changeStatus = async(req, res, next) => {
+//     try {
+        
+//     } catch (error) {
+        
+//     }
+// }
+
 // exports.createMeeting = async (req, res, next) => {
 // 	try {
 //         const meeting = await Meeting.create({

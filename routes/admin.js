@@ -22,6 +22,10 @@ router.route("/admin/announcement/edit").patch(protect,editAnnounce);
 router.route("/admin/appointments").get(protect,getAppointments);
 router.route("/admin/orders").get(protect,getAllOrders);
 router.route("/admin/appointments/:entity").get(protect,getAppointmentsOfentity);
+//router.route("/admin/entity/deactivate").patch(protect,);
+//router.route("/admin/doctor/deactivate").patch(protect,);
+//router.route("/admin/pharmcy/deactivate").patch(protect,);
+
 //router.route("/admin/dashboard").get(protect,getDashboardData);
 
 module.exports = router;
