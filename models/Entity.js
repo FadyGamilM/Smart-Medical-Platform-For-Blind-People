@@ -16,6 +16,12 @@ const entity_schema = new mongoose.Schema({
         default: ""
     },
     address: [String],
+	latitude:{
+		type:Number
+	},
+	longitude:{
+		type:Number
+	},
 	telephone: [String],
 	admin: {
 		type: mongoose.Schema.Types.ObjectId,

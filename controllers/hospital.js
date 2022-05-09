@@ -47,13 +47,15 @@ const Doctor = require("../models/Doctor");
 // @DESCRIPTION                                admin need to see all hospitals
 exports.getAllHospitals = async (req, res, next) => {
 	try {
-		const hospitals = await Entity.find({flag:'H'},{
+		const hospitals = await Entity.find({flag:'H',active:true},{
 			_id:0,
 			name:1,
 			arabic_name:1,
 			icon:1,
 			telephone:1,
-			address:1
+			address:1,
+			latitude:1,
+			longitude:1
 		}).populate({path: "admin", select: {username:1, email:1, _id:0}});
 		return res.status(200).json(hospitals);
 	} catch (error) {
@@ -64,7 +66,7 @@ exports.getAllHospitals = async (req, res, next) => {
 
 exports.HospitalsArabic = async (req, res, next) => {
 	try {
-		const hospitals = await Entity.find({flag:'H'},{
+		const hospitals = await Entity.find({flag:'H',active:true},{
 			_id:0,
 			arabic_name:1,});
 		return res.status(200).json(hospitals);

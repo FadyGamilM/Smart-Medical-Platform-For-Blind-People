@@ -158,6 +158,8 @@ exports.registerHadmin = async(req,res,next) =>{
                 name:req.body.hospitalname,
                 arabic_name:req.body.arabic_hospitalname,
                 address:[req.body.address],
+                latitude:req.body.latitude,
+                longitude:req.body.longitude,
                 telephone:[req.body.telephone],
                 admin:newAdmin._id,
                 flag:'H'
@@ -203,6 +205,8 @@ exports.registerCadmin = async(req,res,next) =>{
                     name:req.body.clinicname,
                     arabic_name:req.body.arabic_clinicname,
                     address:[req.body.address],
+                    latitude:req.body.latitude,
+                    longitude:req.body.longitude,
                     telephone:[req.body.telephone],
                     admin:newAdmin._id,
                     flag:'C'
@@ -247,6 +251,8 @@ exports.registerPadmin = async(req,res,next) =>{
                     name:req.body.pharmacyname,
                     arabic_name:req.body.arabic_pharmacyname,
                     address:[req.body.address],
+                    latitude:req.body.latitude,
+                    longitude:req.body.longitude,
                     telephone:[req.body.telephone],
                     admin:newAdmin._id
                 });
@@ -473,11 +479,12 @@ exports.loginDoctorApp = async(req,res,next) => {
                 if(admin.role =="p_admin"){
                     const entity = await Pharmacy.findOne({admin:admin._id},{
                         _id:0,
-                        name:1,
-                        arabic_name:1,
-                        address:1,
-                        telephone:1,
-                        icon:1
+                        admin:0
+                        // name:1,
+                        // arabic_name:1,
+                        // address:1,
+                        // telephone:1,
+                        // icon:1
                     });
                     const returns = {
                         username:admin.username,
@@ -504,11 +511,12 @@ exports.loginDoctorApp = async(req,res,next) => {
                 else{
                     const entity = await Entity.findOne({admin:admin._id},{
                         _id:0,
-                        name:1,
-                        arabic_name:1,
-                        address:1,
-                        telephone:1,
-                        icon:1
+                        admin:0
+                        // name:1,
+                        // arabic_name:1,
+                        // address:1,
+                        // telephone:1,
+                        // icon:1
                     });
                     const returns = {
                         username:admin.username,

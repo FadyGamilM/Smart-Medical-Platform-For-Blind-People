@@ -47,13 +47,15 @@ const Entity = require("../models/Entity");
 // @DESCRIPTION                                admin need to see all clinics
 exports.getAllClinics = async (req, res, next) => {
 	try {
-		const clinics = await Entity.find({flag:'C'},{
+		const clinics = await Entity.find({flag:'C',active:true},{
 			_id:0,
 			name:1,
 			arabic_name:1,
 			icon:1,
 			telephone:1,
-			address:1
+			address:1,
+			latitude:1,
+			longitude:1
 		}).populate({path: "admin", select: {username:1, email:1, _id:0}});
 		return res.status(200).json(clinics);
 	} catch (error) {
@@ -64,7 +66,7 @@ exports.getAllClinics = async (req, res, next) => {
 
 exports.ClinicsArabic = async (req, res, next) => {
 	try {
-		const clinics = await Entity.find({flag:'C'},{
+		const clinics = await Entity.find({flag:'C',active:true},{
 			_id:0,
 			arabic_name:1,});
 		return res.status(200).json(clinics);

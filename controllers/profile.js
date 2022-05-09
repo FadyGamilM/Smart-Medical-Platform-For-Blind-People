@@ -4,6 +4,7 @@ const Doctor = require("../models/Doctor");
 const User = require("../models/User");
 const Entity = require("../models/Entity");
 const Pharmacy = require("../models/Pharmacy");
+const Prescription = require("../models/Prescription");
 
 exports.getProfile = async (req, res, next) => {
 	try {
@@ -98,11 +99,26 @@ exports.getUserProfile = async (req, res, next) => {
     try {
         const email = req.params.userEmail; 
         const user = await User.findOne({email},{
-            _id:0,
+           // _id:0,
             password:0
         });
         if(user){
-            return res.status(200).json(user);
+            const prescriptions = await Prescription.find({user:user._id},{_id:0,user:0}).populate(
+                {path:"doctor",select:{_id:0,username:1,arabic_username:1,email:1}})
+            const returns = {
+                username:user.username,
+                email:user.email,
+                profilePic:user.profilePic,
+                gender:user.gender,
+                //meetings:user.meetings,
+                history:user.history,
+                dateOfBirth:user.dateOfBirth,
+                blood:user.blood,
+                address:user.address,
+                phone:user.phone,
+                prescriptions
+            };
+            return res.status(200).json(returns);
         }
         else{
             return res.status(400).json("User not found ");
