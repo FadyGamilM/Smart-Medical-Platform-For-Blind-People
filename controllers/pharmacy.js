@@ -39,13 +39,15 @@
 // @DESCRIPTION                                admin need to see all pharmacies
 exports.getAllPharmacies = async (req, res, next) => {
 	try {
-		const pharmacies = await Pharmacy.find({},{
+		const pharmacies = await Pharmacy.find({active:true},{
 			_id:0,
 			name:1,
 			arabic_name:1,
 			icon:1,
 			telephone:1,
-			address:1
+			address:1,
+			latitude:1,
+			longitude:1
 		}).populate({path: "admin", select: {username:1, email:1, _id:0}});
 		return res.status(200).json(pharmacies);
 	} catch (error) {
@@ -56,7 +58,7 @@ exports.getAllPharmacies = async (req, res, next) => {
 
 exports.PharmaciesArabic = async (req, res, next) => {
 	try {
-		const pharmacies = await Pharmacy.find({},{
+		const pharmacies = await Pharmacy.find({active:true},{
 			_id:0,
 			arabic_name:1,
 		});

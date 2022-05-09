@@ -102,7 +102,7 @@ exports.getDepartmentDoctors = async (req, res, next) =>{
     try {
         const department = req.params.depName
         if(department){
-            const doctors = await Doctor.find({
+            const doctors = await Doctor.find({active:true,
                 $or: [
                   { 'specialization': department },
                   { 'arabic_specialization': department }

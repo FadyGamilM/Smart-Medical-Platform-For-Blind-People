@@ -5,6 +5,7 @@ const Pharmacy = require("../models/Pharmacy");
 const Announce = require("../models/Announcement");
 const Order = require("../models/Order");
 const Meeting = require("../models/Meeting");
+const User = require("../models/User");
 
 
 //const Announcement = require("../models/Announcement");
@@ -128,6 +129,40 @@ exports.editAdminInfo = async(req,res,next) => {
 
 };
 
+// exports.editEntityActivity = async (req,res,next) => {
+//     try {
+//         //const _id  = req.id;
+//         const entity = req.body.entity
+//         const updated = await Entity.updateOne({name:entity},{active:true});
+//         if(updated.matchedCount==1 && updated.modifiedCount==1){
+//             return res.status(200).json("edit done successfully"); 
+//         }
+//         else{
+//             res.status(400).json("no change");
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         res.status(400).json(error.message);
+//     }
+// };
+
+// exports.editPharmacyActivity = async (req,res,next) => {
+//     try {
+//         //const _id  = req.id;
+//         const entity = req.body.entity
+//         const updated = await Pharmacy.updateOne({name:entity},{active:true});
+//         if(updated.matchedCount==1 && updated.modifiedCount==1){
+//             return res.status(200).json("edit done successfully"); 
+//         }
+//         else{
+//             res.status(400).json("no change");
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         res.status(400).json(error.message);
+//     }
+// };
+
 exports.addAnnounce = async (req, res, next) => {
     try {
         const _id  = req.id; 
@@ -215,6 +250,55 @@ exports.getAnnounce = async (req, res, next) => {
         res.status(400).json(error.message);
     }
 };
+///////////////////////////////////////////////////////////////
+exports.getAge = async(req, res, next) =>{
+    try {
+        const _id  = req.id; 
+        const type = req.type;
+        //{$year:new Date("$dateOfBirth")},
+        if(type == "admin"){
+            const males = await User.aggregate([
+                { $match: { gender:"Male"}},
+                {$group:{
+                _id:{ $dateDiff: { startDate: "$dateOfBirth",
+                                endDate: "$$NOW",
+                                unit: "year" }}, 
+                count:{$sum:1}
+            }}]);
+            const females = await User.aggregate([
+                { $match: { gender:"Female"}},
+                {$group:{
+                _id:{ $dateDiff: { startDate: "$dateOfBirth",
+                                endDate: "$$NOW",
+                                unit: "year" }}, 
+                count:{$sum:1}
+            }}]);
+            //////////////////////
+            var dict = {};
+            for (let x in males) {
+                // code block to be executed
+                dict[males[x]._id]=[males[x].count,0]
+            };
+            for (let x in females) {
+                // code block to be executed
+                if( dict[females[x]._id]){
+                    dict[females[x]._id]=[ dict[females[x]._id][0], females[x].count]
+                }else{
+                    dict[females[x]._id]=[ 0, females[x].count]
+                }
+            };
+
+            res.status(200).json(dict);
+            //res.status(200).json({males,females});
+        }
+        else{
+           res.status(401).json("not authorized, admin action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
 
 // exports.getAgeOfUsers = async (req, res, next) => {
 //     try {
@@ -226,8 +310,37 @@ exports.getAnnounce = async (req, res, next) => {
 //             //const hospitals = await Entity.find({flag:'H'},{name:1});
 //             //const pharmacies = await Pharmacy.find({},{name:1});
 //             //get profit of each entity in each month
-
-//             //find all users and group by year od dateOfBirth
+// $group : {
+//     _id : { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+//     totalSaleAmount: { $sum: { $multiply: [ "$price", "$quantity" ] } },
+//     averageQuantity: { $avg: "$quantity" },
+//     count: { $sum: 1 }
+//  }
+// $group : {
+//     _id : { $dateDiff: { startDate: "$dateOfBirth",
+//                          endDate: "$$NOW",
+//                          unit: "year" } },
+//     totalSaleAmount: { $sum: { $multiply: [ "$price", "$quantity" ] } },
+//     averageQuantity: { $avg: "$quantity" },
+//     count: { $sum: 1 }
+//  }
+// $group:
+//              {
+//                  _id: null,
+//                  averageTime:
+//                     {
+//                        $avg:
+//                           {
+//                              $dateDiff:
+//                                 {
+//                                     startDate: "$purchased",
+//                                     endDate: "$delivered",
+//                                     unit: "day"
+//                                 }
+//                            }
+//                     }
+//              }
+//             //find all users and group by year of dateOfBirth
 //             //{$group : {_id:"$position", count:{$sum:1}}}
 //             const users = await User.find({},{_id:0,gender:1}).group({_id:"$age", count:{$sum:1}});
 //             // returns={ 
@@ -554,39 +667,104 @@ exports.getAppointmentsOfentity = async (req,res,next) => {
     }
 };
 
-// exports.deactivateEntity = async (req,res,next) =>{
-//     try {
-//         const _id  = req.id; 
-//         const type = req.type;
-//         if(type == "admin"){
+exports.deactivateEntity = async (req,res,next) =>{
+    try {
+        const _id  = req.id; 
+        const type = req.type;
+        if(type == "admin"){
+            const entity = req.body.name;
+            //deactivate this entity
+            const deactivated = await Entity.findOneAndUpdate({name:entity},{active:false});
+            if(deactivated){
+                //deactivate doctors of this entity
+                const deactivated_doctors = await Doctor.updateMany({entity_id:deactivated._id},{active:false});
+                if((deactivated_doctors.matchedCount == deactivated_doctors.modifiedCount)&&(deactivated_doctors.modifiedCount >0)){
+                    return res.status(200).json("Entity is deactivated"); 
+                }
+                else{
+                    const activated = await Entity.updateOne({name:entity},{active:true});
+                    return res.status(400).json("couldn't deactivate entity");
+                }
+            }
+            else{
+                return res.status(400).json("couldn't deactivate entity");
+            }
+        }
+        else{
+           res.status(401).json("not authorized, admin action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
 
-//             res.status(200).json("Entity is deactivated"); 
-//         }
-//         else{
-//            res.status(401).json("not authorized, admin action only"); 
-//         }
-//     } catch (error) {
-//         console.log(error);
-//         res.status(400).json(error.message);
-//     }
-// };
+exports.deactivatePharmacy = async (req,res,next) =>{
+    try {
+        const _id  = req.id; 
+        const type = req.type;
+        if(type == "admin"){
+            const pharmacy = req.body.name;
+            const deactivated = await Pharmacy.findOneAndUpdate({name:pharmacy},{active:false});
+            if(deactivated){
+                //find orders which is pending/approved
+                const orders = await Order.find({pharmacy:deactivated._id, 
+                    $or:[
+                        {status:"pending"},
+                        {status:"approved"}
+                    ]},{_id:1});
+                if(orders.length != 0){
+                    //disapprove orders which is pending/approved
+                    const disapproved_orders = await Order.updateMany({_id:{$in:orders}},
+                        {status:"disapproved", comment:"Sorry, this order is disapproved due to inactivety of pharmacy"});
+                    if((disapproved_orders.matchedCount == disapproved_orders.modifiedCount)&&(deactivated_doctors.modifiedCount >0)){
+                        return res.status(200).json("Pharmacy is deactivated"); 
+                    }
+                    else{
+                        const activated = await Pharmacy.updateOne({name:pharmacy},{active:true});
+                        return res.status(400).json("couldn't deactivate pharmacy");
+                    }
+                }
+                else{
+                    return res.status(200).json("Pharmacy is deactivated");
+                }
+            }
+            else{
+                return res.status(400).json("couldn't deactivate pharmacy");
+            }
+        }
+        else{
+           res.status(401).json("not authorized, admin action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
 
-// exports.deactivatePharmacy = async (req,res,next) =>{
-//     try {
-//         const _id  = req.id; 
-//         const type = req.type;
-//         if(type == "admin"){
-
-//             res.status(200).json("Pharmacy is deactivated"); 
-//         }
-//         else{
-//            res.status(401).json("not authorized, admin action only"); 
-//         }
-//     } catch (error) {
-//         console.log(error);
-//         res.status(400).json(error.message);
-//     }
-// };
+exports.deactivateDoctor = async (req,res,next) =>{
+    try {
+        const _id  = req.id; 
+        const type = req.type;
+        const email = req.body.email;
+        if(type == "admin"){
+            //find this doctor and deactivate
+            const deactivated_doctor = await Doctor.updateOne({email},{active:false});
+            if(deactivated_doctor.matchedCount==1 && deactivated_doctor.modifiedCount==1){
+                return res.status(200).json("Doctor is deactivated");
+            }
+            else{
+                return res.status(400).json("couldn't deactivate doctor");
+            }
+        }
+        else{
+           res.status(401).json("not authorized, admin action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
 
 // exports.deactivateDoctor = async (req,res,next) =>{
 //     try {

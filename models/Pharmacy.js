@@ -16,6 +16,12 @@ const pharmacy_schema = new mongoose.Schema({
 		unique: true
 	},
 	address: [String],
+	latitude:{
+		type:Number
+	},
+	longitude:{
+		type:Number
+	},
 	hero_photo: [String],
 	icon: String,
 	telephone: [String],

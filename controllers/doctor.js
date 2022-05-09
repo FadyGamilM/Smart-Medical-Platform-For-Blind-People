@@ -9,12 +9,12 @@ const User = require("../models/User");
 exports.getDoctorsOfEntity = async (req, res, next) => {
     try {
         const entityName = req.params.entity;
-        const entity = await Entity.findOne({$or: [
+        const entity = await Entity.findOne({active:true,$or: [
             { 'name': entityName },
             { 'arabic_name': entityName }
           ]});
         if(entity){
-            const doctors = await Doctor.find({entity_id:entity._id},{
+            const doctors = await Doctor.find({entity_id:entity._id,active:true},{
                 _id:0,
                 password:0,
                 gender:0,
@@ -144,7 +144,7 @@ exports.editDoctorPhoto = async (req,res,next) => {
 
 exports.DoctorsArabic = async (req, res, next) => {
 	try {
-		const doctors = await Doctor.find({},{
+		const doctors = await Doctor.find({active:true},{
 			_id:0,
 			arabic_username:1,});
 		return res.status(200).json(doctors);
