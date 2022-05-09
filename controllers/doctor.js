@@ -20,8 +20,8 @@ exports.getDoctorsOfEntity = async (req, res, next) => {
                 gender:0,
                 //patients:0,
                 //meetings:0,
-                entity_id:0
-            });
+                //entity_id:0
+            }).populate({path: "entity_id", select: {name:1,arabic_name:1, _id:0}}).sort({rate:-1});
             if(doctors.length != 0){
                 return res.status(200).json(doctors);
             }
