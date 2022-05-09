@@ -287,7 +287,12 @@ exports.getAge = async(req, res, next) =>{
                     dict[females[x]._id]=[ 0, females[x].count]
                 }
             };
-
+            /////////////////
+            // for(let x in dict){
+            //     console.log("dic[x]=",dict[x]);
+            //     console.log("male count =",dict[x][0]);
+            //     console.log("female count =",dict[x][1]);
+            // }
             res.status(200).json(dict);
             //res.status(200).json({males,females});
         }
