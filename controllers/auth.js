@@ -460,6 +460,7 @@ exports.loginDoctorApp = async(req,res,next) => {
                         dateOfBirth:doctor.dateOfBirth,
                         entity_id:doctor.entity_id,
                         role:"doctor",
+                        active:doctor.active,
                         token
                     };
                     return res.status(200).json(returns);
