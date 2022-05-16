@@ -683,13 +683,15 @@ exports.deactivateEntity = async (req,res,next) =>{
             if(deactivated){
                 //deactivate doctors of this entity
                 const deactivated_doctors = await Doctor.updateMany({entity_id:deactivated._id},{active:false});
-                if((deactivated_doctors.matchedCount == deactivated_doctors.modifiedCount)&&(deactivated_doctors.modifiedCount >0)){
-                    return res.status(200).json("Entity is deactivated"); 
-                }
-                else{
-                    const activated = await Entity.updateOne({name:entity},{active:true});
-                    return res.status(400).json("couldn't deactivate entity");
-                }
+                //hia el moshkla hna en el doctor lo m3molo deactivate aslun f kda el matchedCount != modifiedCount
+                // if((deactivated_doctors.matchedCount == deactivated_doctors.modifiedCount)&&(deactivated_doctors.modifiedCount >0)){
+                //     return res.status(200).json("Entity is deactivated"); 
+                // }
+                // else{
+                //     const activated = await Entity.updateOne({name:entity},{active:true});
+                //     return res.status(400).json("couldn't deactivate entity");
+                // }
+                return res.status(200).json("Entity is deactivated");
             }
             else{
                 return res.status(400).json("couldn't deactivate entity");
@@ -722,7 +724,7 @@ exports.deactivatePharmacy = async (req,res,next) =>{
                     //disapprove orders which is pending/approved
                     const disapproved_orders = await Order.updateMany({_id:{$in:orders}},
                         {status:"disapproved", comment:"Sorry, this order is disapproved due to inactivety of pharmacy"});
-                    if((disapproved_orders.matchedCount == disapproved_orders.modifiedCount)&&(deactivated_doctors.modifiedCount >0)){
+                    if((disapproved_orders.matchedCount == disapproved_orders.modifiedCount)&&(disapproved_orders.modifiedCount >0)){
                         return res.status(200).json("Pharmacy is deactivated"); 
                     }
                     else{

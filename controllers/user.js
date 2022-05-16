@@ -89,8 +89,8 @@ exports.reserve = async (req,res,next) =>{
             slot:req.body.slot,
             status:"pending"
         });
-        await Doctor.updateOne({_id:doctor_id},{ $push:{meetings:meeting._id}});
-        await User.updateOne({_id:user_id},{ $push:{meetings:meeting._id}});
+        //await Doctor.updateOne({_id:doctor_id},{ $push:{meetings:meeting._id}});
+        //await User.updateOne({_id:user_id},{ $push:{meetings:meeting._id}});
         return res.status(200).json("you reserved meeting successfully");
     } catch (error) {
         console.log(error);
