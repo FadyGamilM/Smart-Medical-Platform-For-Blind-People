@@ -118,6 +118,7 @@ exports.registerDoctor = async(req,res,next) =>{
                     specialization:req.body.specialization,
                     arabic_specialization:req.body.arabic_specialization,
                     telephone:req.body.telephone,
+                    meeting_price:req.body.meeting_price,
                     entity_id:entity._id
                 });
                 return res.status(200).send("doctor has been added successfully.");
@@ -454,6 +455,7 @@ exports.loginDoctorApp = async(req,res,next) => {
                         bio:doctor.bio,
                         reviews:doctor.reviews,
                         telephone: [String],
+                        meeting_price:doctor.meeting_price,
                         timetable:doctor.timetable,
                         rate_count:doctor.rate_count,
                         rate:doctor.rate,

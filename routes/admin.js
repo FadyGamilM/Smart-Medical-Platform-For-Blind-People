@@ -5,7 +5,10 @@ const {addAnnounce, getAnnounce,getPendingOrders,
     getDashboardData,editAdminInfo,deleteAnnounce,
     getAppointments,getAllOrders,getAppointmentsOfentity,
     editAnnounce,deactivateEntity,deactivateDoctor,deactivatePharmacy,
-    getAge,editEntityActivity,editPharmacyActivity} = require("../controllers/admin");
+    getAge,activateEntity,activatePharmacy,activateDoctor,
+    getDeactivatedClinics,getDeactivatedHospitals,
+    getDeactivatedPharmacies,getDeactivatedDoctors,
+    getDeactivatedDoctorsOfEntity,editDoctorPrice} = require("../controllers/admin");
 const { protect } = require("../middleware/authMiddleware");
 
 router.route("/admin/announcement").post(protect,addAnnounce);
@@ -27,6 +30,18 @@ router.route("/admin/entity/deactivate").patch(protect,deactivateEntity);
 router.route("/admin/doctor/deactivate").patch(protect,deactivateDoctor);
 router.route("/admin/pharmcy/deactivate").patch(protect,deactivatePharmacy);
 router.route("/admin/dashboard/ages").get(protect,getAge);
+///
+router.route("/admin/hospitals/deactivated").get(protect,getDeactivatedHospitals);
+router.route("/admin/clinics/deactivated").get(protect,getDeactivatedClinics);
+router.route("/admin/pharmacies/deactivated").get(protect,getDeactivatedPharmacies);
+router.route("/admin/doctors/deactivated").get(protect,getDeactivatedDoctors);
+router.route("/admin/doctors/deactivated/:entity").get(protect,getDeactivatedDoctorsOfEntity);
+
+router.route("/admin/entity/activate").patch(protect,activateEntity);
+router.route("/admin/pharmcy/activate").patch(protect,activatePharmacy);
+router.route("/admin/doctor/activate").patch(protect,activateDoctor);
+router.route("/admin/doctor/edit/price").patch(protect,editDoctorPrice);
+///
 //router.route("/admin/dashboard").get(protect,getDashboardData);
 // trial
 //router.route("/admin/edit/entity/activity").patch(editEntityActivity);

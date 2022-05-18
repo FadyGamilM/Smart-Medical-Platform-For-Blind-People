@@ -62,8 +62,11 @@ const doctor_schema = new mongoose.Schema({
 	timetable: [
 		{
 			day:String,
+			//date instead of day as there is only one monday per week
 			from:String,
 			to:String
+			//array of slots
+			//when user reserve meeting remove the slot from this array
 		},
 	],
 	rate_count:{
@@ -75,6 +78,9 @@ const doctor_schema = new mongoose.Schema({
 		default:0
 	},
 	reviews:[String],
+	meeting_price:{
+		type: Number
+	},
 	entity_id: {
 		type: mongoose.Schema.Types.ObjectId,
 		required: true,

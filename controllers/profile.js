@@ -66,6 +66,7 @@ exports.getProfile = async (req, res, next) => {
                                 "arabic_specialization":doctor.arabic_specialization,
                                 "bio":doctor.bio,
                                 //"meetings":doctor.meetings,
+                                "meeting_price":doctor.meeting_price,
                                 "timetable":doctor.timetable,
                                 "rate":doctor.rate,
                                 "entity_name":doctor.entity_id.name,

@@ -22,6 +22,7 @@ exports.getHomeData = async (req, res, next) => {
 				specialization: 1,
 				arabic_specialization:1,
                 bio:1,
+				meeting_price:1,
                 timetable:1,
 				rate: 1
 				//entity_id: 1,
