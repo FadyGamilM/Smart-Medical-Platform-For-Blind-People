@@ -129,40 +129,6 @@ exports.editAdminInfo = async(req,res,next) => {
 
 };
 
-// exports.editEntityActivity = async (req,res,next) => {
-//     try {
-//         //const _id  = req.id;
-//         const entity = req.body.entity
-//         const updated = await Entity.updateOne({name:entity},{active:true});
-//         if(updated.matchedCount==1 && updated.modifiedCount==1){
-//             return res.status(200).json("edit done successfully"); 
-//         }
-//         else{
-//             res.status(400).json("no change");
-//         }
-//     } catch (error) {
-//         console.log(error);
-//         res.status(400).json(error.message);
-//     }
-// };
-
-// exports.editPharmacyActivity = async (req,res,next) => {
-//     try {
-//         //const _id  = req.id;
-//         const entity = req.body.entity
-//         const updated = await Pharmacy.updateOne({name:entity},{active:true});
-//         if(updated.matchedCount==1 && updated.modifiedCount==1){
-//             return res.status(200).json("edit done successfully"); 
-//         }
-//         else{
-//             res.status(400).json("no change");
-//         }
-//     } catch (error) {
-//         console.log(error);
-//         res.status(400).json(error.message);
-//     }
-// };
-
 exports.addAnnounce = async (req, res, next) => {
     try {
         const _id  = req.id; 
@@ -762,6 +728,243 @@ exports.deactivateDoctor = async (req,res,next) =>{
             }
             else{
                 return res.status(400).json("couldn't deactivate doctor");
+            }
+        }
+        else{
+           res.status(401).json("not authorized, admin action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
+///////////////////////////////////////
+exports.getDeactivatedClinics = async (req, res, next) => {
+	try {
+        const type = req.type;
+        if(type == "admin"){
+            const clinics = await Entity.find({flag:'C',active:false},{
+                _id:0,
+                name:1,
+                arabic_name:1,
+                icon:1,
+                telephone:1,
+                address:1,
+                latitude:1,
+                longitude:1
+            }).populate({path: "admin", select: {username:1, email:1, _id:0}});
+            if(clinics.length != 0){
+                return res.status(200).json(clinics);
+            }
+            else{
+                return res.status(200).json("there is no deactivated clinics");
+            }
+        }
+        else{
+           res.status(401).json("not authorized, admin action only"); 
+        }
+	} catch (error) {
+		console.log(error);
+        res.status(400).json(error.message);
+	}
+};
+
+exports.getDeactivatedHospitals = async (req, res, next) => {
+	try {
+        const type = req.type;
+        if(type == "admin"){
+            const hospitals = await Entity.find({flag:'H',active:false},{
+                _id:0,
+                name:1,
+                arabic_name:1,
+                icon:1,
+                telephone:1,
+                address:1,
+                latitude:1,
+                longitude:1
+            }).populate({path: "admin", select: {username:1, email:1, _id:0}});
+            if(hospitals.length != 0){
+                return res.status(200).json(hospitals);
+            }
+            else{
+                return res.status(200).json("there is no deactivated hospitals");
+            }
+        }
+        else{
+           res.status(401).json("not authorized, admin action only"); 
+        }
+	} catch (error) {
+		console.log(error);
+        res.status(400).json(error.message);
+	}
+};
+
+exports.getDeactivatedPharmacies = async (req, res, next) => {
+	try {
+        const type = req.type;
+        if(type == "admin"){
+            const pharmacies = await Pharmacy.find({active:false},{
+                _id:0,
+                name:1,
+                arabic_name:1,
+                icon:1,
+                telephone:1,
+                address:1,
+                latitude:1,
+                longitude:1
+            }).populate({path: "admin", select: {username:1, email:1, _id:0}});
+            if(pharmacies.length != 0){
+                return res.status(200).json(pharmacies);
+            }
+            else{
+                return res.status(200).json("there is no deactivated pharmacies");
+            }
+        }
+        else{
+           res.status(401).json("not authorized, admin action only"); 
+        }
+	} catch (error) {
+		console.log(error);
+        res.status(400).json(error.message);
+	}
+};
+
+exports.getDeactivatedDoctors = async (req, res, next) => {
+	try {
+        const type = req.type;
+        if(type == "admin"){
+            const doctors = await Doctor.find({active:false},
+            {
+                _id:0,
+                username: 1,
+                email:1,
+                specialization: 1
+            });
+            if(doctors.length != 0){
+                return res.status(200).json(doctors);
+            }
+            else{
+                return res.status(200).json("there is no deactivated doctors");
+            }
+        }
+        else{
+           res.status(401).json("not authorized, admin action only"); 
+        }
+	} catch (error) {
+		console.log(error);
+        res.status(400).json(error.message);
+	}
+};
+
+exports.getDeactivatedDoctorsOfEntity = async (req, res, next) => {
+	try {
+        const type = req.type;
+        if(type == "admin"){
+            const entityName = req.params.entity;
+            const entity = await Entity.findOne({name:entityName},{_id:1});
+            if(entity){
+                const doctors = await Doctor.find({entity_id:entity,active:false},{
+                    _id:0,
+                    username:1,
+                    email:1,
+                    specialization:1
+                });
+                if(doctors.length != 0){
+                    return res.status(200).json(doctors);
+                }
+                else{
+                    return res.status(200).json("this entity has no deactivated doctors");
+                }
+            }
+            else{
+                return res.status(400).json("no entity found with this name");
+            }
+        }
+        else{
+           res.status(401).json("not authorized, admin action only"); 
+        }
+	} catch (error) {
+		console.log(error);
+        res.status(400).json(error.message);
+	}
+};
+
+exports.activateEntity = async (req,res,next) => {
+    try {
+        const type = req.type;
+        if(type == "admin"){
+            const entity = req.body.entity
+            const updated = await Entity.updateOne({name:entity},{active:true});
+            if(updated.matchedCount==1 && updated.modifiedCount==1){
+                return res.status(200).json("entity is activated"); 
+            }
+            else{
+                res.status(400).json("couldn't activate");
+            }
+        }
+        else{
+           res.status(401).json("not authorized, admin action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
+
+exports.activatePharmacy = async (req,res,next) => {
+    try {
+        const type = req.type;
+        if(type == "admin"){
+            const entity = req.body.entity
+            const updated = await Pharmacy.updateOne({name:entity},{active:true});
+            if(updated.matchedCount==1 && updated.modifiedCount==1){
+                return res.status(200).json("pharmacy is activated"); 
+            }
+            else{
+                res.status(400).json("couldn't activate");
+            }
+        }
+        else{
+           res.status(401).json("not authorized, admin action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
+
+exports.activateDoctor = async (req,res,next) => {
+    try {
+        const type = req.type;
+        if(type == "admin"){
+            const email = req.body.email;
+            const updated = await Doctor.updateOne({email},{active:true});
+            if(updated.matchedCount==1 && updated.modifiedCount==1){
+                return res.status(200).json("doctor is activated"); 
+            }
+            else{
+                res.status(400).json("couldn't activate");
+            }
+        }
+        else{
+           res.status(401).json("not authorized, admin action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
+
+exports.editDoctorPrice = async (req,res,next) => {
+    try {
+        const type = req.type;
+        if(type == "admin"){
+            const updated = await Doctor.updateOne({email:req.body.email},{meeting_price:req.body.price});
+            if(updated.matchedCount==1 && updated.modifiedCount==1){
+                return res.status(200).json("meeting price is updated"); 
+            }
+            else{
+                res.status(400).json("couldn't update");
             }
         }
         else{

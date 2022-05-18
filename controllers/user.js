@@ -80,10 +80,10 @@ exports.reserve = async (req,res,next) =>{
         //get id of user and docyor to create the new meeting
         const user_id  = req.id; 
         //const type = req.type;
-        const doctor_id = await Doctor.findOne({email:req.body.doctorEmail},{_id:1});
+        const doctor = await Doctor.findOne({email:req.body.doctorEmail},{_id:1,meeting_price:1});
         const meeting = await Meeting.create({
             user:user_id,
-            doctor:doctor_id,
+            doctor:doctor._id,
             Date:req.body.date,
             day:req.body.day,
             slot:req.body.slot,
@@ -112,8 +112,6 @@ exports.getDepartmentDoctors = async (req, res, next) =>{
                 password:0,
                 gender:0,
                 dateOfBirth:0
-                //patients:0,
-                //meetings:0
             }).populate({path: "entity_id", select: {name:1,arabic_name:1, _id:0}}).sort({rate:-1});//sort doctors by rate in descending order
             if(doctors.length != 0){
                 return res.status(200).json(doctors);
@@ -145,6 +143,7 @@ exports.getDoctor = async (req,res,next) =>{
         arabic_specialization:1,
         bio:1,
         telephone:1,
+        meeting_price:1,
 	    timetable:1,
         reviews:1,
         rate:1,
@@ -187,6 +186,30 @@ exports.getReservedSlots = async (req,res,next) =>{
         return res.status(400).json(error.message); 
     }
 };
+
+// exports.getAvailableSlots = async (req,res,next) =>{
+//     try {
+//         const doctor = await Doctor.findOne({email:req.params.doctorname},{_id:1,timetable:1});
+//         //timetable:[{day,from,to,[slots]}]
+//         //var avialable_time=timetable
+//         const reserved = await Meeting.find({doctor:doctor._id,},{slot:1,Date:1,day:1,_id:0});//(Date>=Date.now.Date)
+//         //console.log("reserved=",reserved)
+//         //reserved=[{slot:1,Date:1,day:1}]
+//         //for(object in reserved):
+//         //  delete this slot from array of slots of this day
+//         //myArray.findIndex(x => x.id === '45');
+//         //myArray.filter(x => x.id === '45');
+//         if(reserved.length != 0){
+//             return res.status(200).json(reserved);
+//         }
+//         else{
+//             return res.status(200).json("no reservations in this date");
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         return res.status(400).json(error.message); 
+//     }
+// };
 
 exports.getOrders = async (req,res,next) =>{
     try {
