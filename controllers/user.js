@@ -87,6 +87,7 @@ exports.reserve = async (req,res,next) =>{
             Date:req.body.date,
             day:req.body.day,
             slot:req.body.slot,
+            price:doctor.meeting_price,
             status:"pending"
         });
         //await Doctor.updateOne({_id:doctor_id},{ $push:{meetings:meeting._id}});

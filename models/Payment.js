@@ -2,7 +2,9 @@
 
 // const payment_schema = new mongoose.Schema({
 //     entity:{
-
+//         type: mongoose.Schema.Types.ObjectId,
+// 		required: true,
+// 		ref: "Entity",
 //     },
 //     amount:{
 //         type:Number
