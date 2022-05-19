@@ -201,3 +201,70 @@ exports.getMeetings = async (req,res,next) =>{
         return res.status(400).json(error.message); 
     }
 };
+
+///
+exports.removeTime = async (req, res, next) =>{
+    try {
+        const _id  = req.id; 
+        const type = req.type;
+        if(type == "doctor"){
+            const day = req.body.day;
+            const from = req.body.from;
+            const to = req.body.to;
+            /////////// get slots ///////////////////////
+            var from_n = parseInt(from);
+            var to_n = parseInt(to);
+            const no_of_slots = (to_n - from_n)*2;
+            var slots =[];
+            var f=from_n
+            var t=from_n +1
+            for (let i = 0; i < no_of_slots; i++){
+                if (i % 2 === 0){
+                    var new_slot = `${f}:00 - ${f}:30`;
+                    slots.push(new_slot);
+                }
+                else{
+                    var new_slot = `${f}:30 - ${t}:00`;
+                    slots.push(new_slot);
+                    f += 1;
+                    t += 1;
+                }
+            };
+            console.log(day);
+            console.log(from);
+            console.log(to);
+            console.log(slots);
+            /////////////////////////////////////////////////////////
+            //check first that no one is reserving during this time
+            //Date>=today
+            const today = new Date();
+            console.log(today);
+            //we have to set today time to 0
+            const meetings = await Meeting.find({doctor:_id ,Date:{ $gte: today },day ,slot:{$in:slots}},{_id:1});
+            //remove from timetable the object with certain day and from ,to
+            //{ $pull: { timetable: { day, from, to} } }
+            console.log(meetings);
+            if(meetings.length === 0){
+                const updated = await Doctor.updateOne({_id},{
+                    $pull: { timetable: { day, from, to} }
+                });
+                if(updated.matchedCount==1 && updated.modifiedCount==1){
+                    return res.status(200).json("timetable has been updated successfully");
+                }
+                else{
+                    res.status(400).json("couldn't update");
+                }
+            }
+            else{
+                return res.status(200).json("you have meetings in this day, you can't delete this time");
+            }
+        }
+        else{
+           res.status(401).json("not authorized, doctor action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json(error.message);
+    }
+};
+///

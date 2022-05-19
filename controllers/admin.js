@@ -8,46 +8,83 @@ const Meeting = require("../models/Meeting");
 const User = require("../models/User");
 
 
-//const Announcement = require("../models/Announcement");
-//this must be protected 
-// exports.deleteAdmin = async (req, res, next) => {
-//     try {
-//         //todo
-//         const adminId = req.body.id;
-//         console.log(typeof adminId);
-//         const deletedAdmin = await Admin.findOneAndDelete({_id:adminId});
-//         console(deletedAdmin);
-//         res.status(200).json("Admin and Entity and doctors of this entity  deleted successfully")
-//     } catch (error) {
-//         console.log(error);
-//         res.status(400).json(error.message);
-//     }
-// }
+exports.getActiveProfit = async (req, res, next) => {
+    try { 
+        const type = req.type;
+        if(type == "admin"){
+            //pie chart ( get number of hospitals & clinics & pharmacies)
+            // const clinics = await Entity.find({flag:'C'},{name:1});
+            // const hospitals = await Entity.find({flag:'H'},{name:1});
+            // const pharmacies = await Pharmacy.find({},{name:1});
 
-// exports.getDashboardData = async (req, res, next) => {
-//     try {
-//         const _id  = req.id; 
-//         const type = req.type;
-//         if(type == "admin"){
-//             //pie chart ( get number of hospitals & clinics & pharmacies)
-//             const clinics = await Entity.find({flag:'C'},{name:1});
-//             const hospitals = await Entity.find({flag:'H'},{name:1});
-//             const pharmacies = await Pharmacy.find({},{name:1});
-//             //get profit of each entity in each month
-//             returns={ 
-//                 clinics_Count:clinics.length,
-//                 hospitals_count:hospitals.length,
-//                 pharmacies_count:pharmacies.length};
-//             res.status(200).json("announcement has been added successfully"); 
-//         }
-//         else{
-//            res.status(401).json("not authorized, admin action only"); 
-//         }
-//     } catch (error) {
-//         console.log(error);
-//         res.status(400).json(error.message);
-//     }
-// };
+            //get profit of each entity in each month
+            
+            // const active_profit = await Meeting.aggregate([
+                
+            //     //{ $match: { date between start date and end date}},
+            //     // {$lookup:{
+            //     //         from: "Doctor",
+            //     //         localField: "doctor",
+            //     //         foreignField: "_id",
+            //     //         as: "doc"
+            //     // }},
+            //     // {$lookup:{
+            //     //     from: "Entity",
+            //     //     localField: "entity_id",
+            //     //     foreignField: "_id",
+            //     //     as: "entity_name"
+            //     // }},
+
+            //     // {$group:{
+            //     // _id:"$doctor", 
+            //     // profit:{$sum:"$price"}}
+            //     // }
+            //     // {
+            //     //     $lookup:
+            //     //        {
+            //     //           from: "Doctor",
+            //     //           localField: "doctor",
+            //     //           foreignField: "_id",
+            //     //           //let: {  },
+            //     //           //pipeline: [ { $project: { username: 1, _id: 0 } } ],
+            //     //           as:"doctor_info"
+            //     //        }
+            //     //  }
+            //     // {
+            //     //     $lookup:
+            //     //        {
+            //     //          from: "Doctor",
+            //     //          let: { doctor_id: "$doctor" },
+            //     //          pipeline: [
+            //     //             { $match:
+            //     //                 {$expr:{
+            //     //                    $eq: ["$_id",  "$$doctor_id" ] 
+            //     //                 }}
+                                
+            //     //             },
+            //     //             { $project: { username: 1, _id: 0 } }
+            //     //          ],
+            //     //          as: "entity"
+            //     //        }
+            //     //   }
+            // ]);
+            const meetings = await Meeting.find({},{price:1,doctor:1,_id:0}).populate(
+                {path: "doctor", select: {username:1,entity_id:1, _id:0},populate:{path: "entity_id", select: {name:1, _id:0}}}); 
+            
+            var dict = {};
+            // for(let x in meetings){
+            //     if(x["price"])
+            // }
+            res.status(200).json(active_profit);
+        }
+        else{
+           res.status(401).json("not authorized, admin action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
 
 //edit info of hospital or clinic or pharmacy admin
 exports.editAdminInfo = async(req,res,next) => {
@@ -395,7 +432,7 @@ exports.getPendingOrders = async (req, res, next) =>{
                 // pharmacyRespond:false,
                 // userRespond:false
             },
-                {order_data:1,price:1,user:1,status:1}).populate(
+                {order_data:1,price:1,user:1,status:1,flag:1}).populate(
                 {path:"user", 
                 select: {_id:0,username:1,email:1,profilePic:1}});
             if(orders.length != 0){
@@ -428,7 +465,7 @@ exports.getApprovedOrders = async (req, res, next) =>{
                 // pharmacyRespond:true,
                 // userRespond:false
             },
-                {order_data:1,price:1,user:1,status:1}).populate(
+                {order_data:1,price:1,user:1,status:1,flag:1}).populate(
                 {path:"user", 
                 select: {_id:0,username:1,email:1,profilePic:1}});
             if(orders.length != 0){
@@ -462,7 +499,7 @@ exports.getPreparingOrders = async (req, res, next) =>{
                 // delivered:false,
                 // userRespond:true
             },
-                {order_data:1,price:1,user:1}).populate(
+                {order_data:1,price:1,user:1,flag:1}).populate(
                 {path:"user", 
                 select: {_id:0,username:1,email:1,profilePic:1}});
             if(orders.length != 0){
@@ -493,7 +530,7 @@ exports.getHistory = async (req, res, next) =>{
                 { status:"disapproved" },
                 { status:"cancelled" },
                 { status:"delivered" }]},
-                {order_data:1,price:1,user:1,status:1}).populate(
+                {order_data:1,price:1,user:1,status:1,flag:1}).populate(
                 {path:"user", 
                 select: {_id:0,username:1,email:1,profilePic:1}});
             if(orders.length != 0){
@@ -838,7 +875,9 @@ exports.getDeactivatedDoctors = async (req, res, next) => {
                 _id:0,
                 username: 1,
                 email:1,
-                specialization: 1
+                specialization: 1,
+                telephone:1,
+                meeting_price:1
             });
             if(doctors.length != 0){
                 return res.status(200).json(doctors);

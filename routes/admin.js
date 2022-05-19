@@ -8,7 +8,8 @@ const {addAnnounce, getAnnounce,getPendingOrders,
     getAge,activateEntity,activatePharmacy,activateDoctor,
     getDeactivatedClinics,getDeactivatedHospitals,
     getDeactivatedPharmacies,getDeactivatedDoctors,
-    getDeactivatedDoctorsOfEntity,editDoctorPrice} = require("../controllers/admin");
+    getDeactivatedDoctorsOfEntity,editDoctorPrice,
+    getActiveProfit} = require("../controllers/admin");
 const { protect } = require("../middleware/authMiddleware");
 
 router.route("/admin/announcement").post(protect,addAnnounce);
@@ -42,6 +43,7 @@ router.route("/admin/pharmcy/activate").patch(protect,activatePharmacy);
 router.route("/admin/doctor/activate").patch(protect,activateDoctor);
 router.route("/admin/doctor/edit/price").patch(protect,editDoctorPrice);
 ///
+router.route("/admin/dashboard/profit").get(protect,getActiveProfit);
 //router.route("/admin/dashboard").get(protect,getDashboardData);
 // trial
 //router.route("/admin/edit/entity/activity").patch(editEntityActivity);
