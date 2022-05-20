@@ -47,7 +47,7 @@ const profileRoutes = require("./routes/profile");
 // //! import pharmacy routes and chain these routes to main express app
 const pharmacyRoutes = require("./routes/pharmacy");
 // //! import meeting routes and chain these routes to main express app
-// const meetingRoutes = require("./routes/meeting");
+//const meetingRoutes = require("./routes/meeting");
 //! import clinic routes and chain these routes to main express app
 const clinicRoutes = require("./routes/clinic");
 //! import meeting routes and chain these routes to main express app
@@ -62,7 +62,7 @@ app.use(hospitalRoutes);
 app.use(clinicRoutes);
 app.use(profileRoutes);
 app.use(pharmacyRoutes);
-// app.use(meetingRoutes);
+//app.use(meetingRoutes);
 app.use(adminRoutes);
 app.use(userRoutes);
 

@@ -17,10 +17,12 @@ const pharmacy_schema = new mongoose.Schema({
 	},
 	address: [String],
 	latitude:{
-		type:Number
+		type:Number,
+		default:0
 	},
 	longitude:{
-		type:Number
+		type:Number,
+		default:0
 	},
 	hero_photo: [String],
 	icon: String,
