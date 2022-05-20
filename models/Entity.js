@@ -17,10 +17,12 @@ const entity_schema = new mongoose.Schema({
     },
     address: [String],
 	latitude:{
-		type:Number
+		type:Number,
+		default:0
 	},
 	longitude:{
-		type:Number
+		type:Number,
+		default:0
 	},
 	telephone: [String],
 	admin: {

@@ -6,6 +6,7 @@ const Announce = require("../models/Announcement");
 const Order = require("../models/Order");
 const Meeting = require("../models/Meeting");
 const User = require("../models/User");
+const Entity_Admin = require("../models/Entity_Admin");
 
 
 exports.getActiveProfit = async (req, res, next) => {
@@ -69,13 +70,29 @@ exports.getActiveProfit = async (req, res, next) => {
             //     //   }
             // ]);
             const meetings = await Meeting.find({},{price:1,doctor:1,_id:0}).populate(
-                {path: "doctor", select: {username:1,entity_id:1, _id:0},populate:{path: "entity_id", select: {name:1, _id:0}}}); 
-            
+            {path: "doctor", select: {username:1,entity_id:1, _id:0},populate:{path: "entity_id", select: {name:1, _id:0}}}); 
             var dict = {};
-            // for(let x in meetings){
-            //     if(x["price"])
-            // }
-            res.status(200).json(active_profit);
+            for(let x in meetings){
+                if(meetings[x]["price"] > 0){
+                    if(dict[meetings[x]["doctor"]["entity_id"]["name"]] > 0){
+                        dict[meetings[x]["doctor"]["entity_id"]["name"]] += meetings[x]["price"];
+                    }
+                    else{
+                        dict[meetings[x]["doctor"]["entity_id"]["name"]] = meetings[x]["price"];
+                    }
+                    
+                }else{
+                    continue;
+                }
+            }
+            var len = Object.keys(dict).length;
+            if(len>0){
+                res.status(200).json(dict);
+            }
+            else{
+                res.status(200).json("there is no entity has profit yet");
+            }
+            
         }
         else{
            res.status(401).json("not authorized, admin action only"); 
@@ -164,6 +181,45 @@ exports.editAdminInfo = async(req,res,next) => {
         res.status(400).json(error.message); 
     }
 
+};
+
+exports.editMap = async (req, res, next) => {
+    try {
+        const _id  = req.id; 
+        const type = req.type;
+        if(type == "admin"){
+            const update = req.body;
+            const admin = await Entity_Admin.findOne({_id},{role:1,_id:0});
+            //console.log(admin)
+            if(admin.role=='p_admin'){
+                const updated = await Pharmacy.updateOne({admin:_id},update);
+                if(updated.matchedCount==1 && updated.modifiedCount==1){
+                    return res.status(200).json("position has been updated successfully");
+                }
+                else{
+                    res.status(400).json("no change");
+                }
+            }
+            else if((admin.role=='h_admin') || (admin.role=='c_admin')){
+                const updated = await Entity.updateOne({admin:_id},update);
+                if(updated.matchedCount==1 && updated.modifiedCount==1){
+                    return res.status(200).json("position has been updated successfully");
+                }
+                else{
+                    res.status(400).json("no change");
+                }
+            }
+            else{
+                res.status(400).json("you are not an entity admin!!");
+            }
+        }
+        else{
+           res.status(401).json("not authorized, admin action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
 };
 
 exports.addAnnounce = async (req, res, next) => {
