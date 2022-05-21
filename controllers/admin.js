@@ -92,8 +92,13 @@ exports.getActiveProfit = async (req, res, next) => {
             //         }
             //     },
             //   ]);
-            const meetings = await Meeting.find({},{price:1,doctor:1,_id:0}).populate(
+
+            const start = req.params.startDate;
+            const end = req.params.endDate;
+            const meetings = await Meeting.find({Date:{$gte:start,$lte:end}},{price:1,doctor:1,_id:0}).populate(
             {path: "doctor", select: {username:1,entity_id:1, _id:0},populate:{path: "entity_id", select: {name:1,flag:1, _id:0}}}); 
+            //console.log(meetings);
+            //console.log(meetings.length);
             var hospitals = {};
             var clinics = {};
             // for(let x in meetings){

@@ -46,7 +46,7 @@ router.route("/admin/pharmcy/activate").patch(protect,activatePharmacy);
 router.route("/admin/doctor/activate").patch(protect,activateDoctor);
 router.route("/admin/doctor/edit/price").patch(protect,editDoctorPrice);
 ///
-router.route("/admin/dashboard/profit").get(protect,getActiveProfit);
+router.route("/admin/dashboard/profit/:startDate/:endDate").get(protect,getActiveProfit);
 //router.route("/admin/dashboard").get(protect,getDashboardData);
 // trial
 //router.route("/admin/edit/entity/activity").patch(editEntityActivity);
