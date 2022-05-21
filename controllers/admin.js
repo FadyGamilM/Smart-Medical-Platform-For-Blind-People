@@ -69,29 +69,96 @@ exports.getActiveProfit = async (req, res, next) => {
             //     //        }
             //     //   }
             // ]);
+            // const doctors_profit = await Meeting.aggregate([
+            //     // {
+            //     //   "$unwind": "$doctor"
+            //     // },
+            //     {
+            //       "$group": {
+            //         "_id": {
+            //           "Doctor": "$doctor"
+            //         },
+            //         "profit": {
+            //           "$sum": "$price"
+            //         }
+            //       }
+            //     },
+            //     {
+            //         "$lookup": {
+            //           "from": "Doctor",
+            //           "localField": "doctor",
+            //           "foreignField": "_id",
+            //           "as": "doctor_details"
+            //         }
+            //     },
+            //   ]);
             const meetings = await Meeting.find({},{price:1,doctor:1,_id:0}).populate(
-            {path: "doctor", select: {username:1,entity_id:1, _id:0},populate:{path: "entity_id", select: {name:1, _id:0}}}); 
-            var dict = {};
+            {path: "doctor", select: {username:1,entity_id:1, _id:0},populate:{path: "entity_id", select: {name:1,flag:1, _id:0}}}); 
+            var hospitals = {};
+            var clinics = {};
+            // for(let x in meetings){
+            //     if(meetings[x]["price"] > 0){
+            //         if(dict[meetings[x]["doctor"]["entity_id"]["name"]] > 0){
+            //             dict[meetings[x]["doctor"]["entity_id"]["name"]] += meetings[x]["price"];
+            //         }
+            //         else{
+            //             dict[meetings[x]["doctor"]["entity_id"]["name"]] = meetings[x]["price"];
+            //         }
+                    
+            //     }else{
+            //         continue;
+            //     }
+            // }
             for(let x in meetings){
                 if(meetings[x]["price"] > 0){
-                    if(dict[meetings[x]["doctor"]["entity_id"]["name"]] > 0){
-                        dict[meetings[x]["doctor"]["entity_id"]["name"]] += meetings[x]["price"];
+                    if(meetings[x]["doctor"]["entity_id"]["flag"]=='H'){
+                        if(hospitals[meetings[x]["doctor"]["entity_id"]["name"]]>0){
+                            hospitals[meetings[x]["doctor"]["entity_id"]["name"]] += meetings[x]["price"];
+                        }
+                        else{
+                            hospitals[meetings[x]["doctor"]["entity_id"]["name"]] = meetings[x]["price"];
+                        }
                     }
-                    else{
-                        dict[meetings[x]["doctor"]["entity_id"]["name"]] = meetings[x]["price"];
+                    else if(meetings[x]["doctor"]["entity_id"]["flag"]=='C'){
+                        if(clinics[meetings[x]["doctor"]["entity_id"]["name"]]>0){
+                            clinics[meetings[x]["doctor"]["entity_id"]["name"]] += meetings[x]["price"];
+                        }
+                        else{
+                            clinics[meetings[x]["doctor"]["entity_id"]["name"]] = meetings[x]["price"];
+                        }
                     }
-                    
                 }else{
                     continue;
                 }
             }
-            var len = Object.keys(dict).length;
-            if(len>0){
-                res.status(200).json(dict);
-            }
-            else{
-                res.status(200).json("there is no entity has profit yet");
-            }
+            // let maxKey_H, maxValue_H = 0;
+            // for(const [key, value] of Object.entries(dict_H)) {
+            //     if(value > maxValue_H) {
+            //         maxValue_H = value;
+            //         maxKey_H = key;
+            //     }
+            // }
+            // let maxKey_C, maxValue_C = 0;
+            // for(const [key, value] of Object.entries(dict_C)) {
+            //     if(value > maxValue_C) {
+            //         maxValue_C = value;
+            //         maxKey_C = key;
+            //     }
+            // }
+            // const hospital = [maxKey_H,maxValue_H];
+            // const clinic = [maxKey_C,maxValue_C];
+            res.status(200).json({hospitals , clinics});
+            // console.log("maxkey: ",maxKey);
+            // console.log("maxValue: ",maxValue);
+            // console.log(dict_H[maxKey]);
+            // var len_H = Object.keys(dict_H).length;
+            // var len_C = Object.keys(dict_C).length;
+            // if(len_H>0 && len_C>0){
+            //     res.status(200).json({dict_H,dict_C});
+            // }
+            // else{
+            //     res.status(200).json("there is no entity has profit yet");
+            // }
             
         }
         else{
