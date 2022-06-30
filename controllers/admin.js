@@ -215,7 +215,9 @@ exports.editAdminInfo = async(req,res,next) => {
                             name:req.body.entity_name,
                             arabic_name:req.body.arabic_entity_name,
                             address:req.body.entity_address,
-                            telephone:req.body.entity_telephone
+                            telephone:req.body.entity_telephone,
+                            latitude:req.body.latitude,
+                            longitude:req.body.longitude
                         });
                         res.status(200).json("you edited your profile successfully");
                     }
@@ -238,7 +240,9 @@ exports.editAdminInfo = async(req,res,next) => {
                             name:req.body.entity_name,
                             arabic_name: req.body.arabic_entity_name,
                             address:req.body.entity_address,
-                            telephone:req.body.entity_telephone
+                            telephone:req.body.entity_telephone,
+                            latitude:req.body.latitude,
+                            longitude:req.body.longitude
                         });
                         res.status(200).json("you edited your profile successfully");
                     }
@@ -255,44 +259,44 @@ exports.editAdminInfo = async(req,res,next) => {
 
 };
 
-exports.editMap = async (req, res, next) => {
-    try {
-        const _id  = req.id; 
-        const type = req.type;
-        if(type == "admin"){
-            const update = req.body;
-            const admin = await Entity_Admin.findOne({_id},{role:1,_id:0});
-            //console.log(admin)
-            if(admin.role=='p_admin'){
-                const updated = await Pharmacy.updateOne({admin:_id},update);
-                if(updated.matchedCount==1 && updated.modifiedCount==1){
-                    return res.status(200).json("position has been updated successfully");
-                }
-                else{
-                    res.status(400).json("no change");
-                }
-            }
-            else if((admin.role=='h_admin') || (admin.role=='c_admin')){
-                const updated = await Entity.updateOne({admin:_id},update);
-                if(updated.matchedCount==1 && updated.modifiedCount==1){
-                    return res.status(200).json("position has been updated successfully");
-                }
-                else{
-                    res.status(400).json("no change");
-                }
-            }
-            else{
-                res.status(400).json("you are not an entity admin!!");
-            }
-        }
-        else{
-           res.status(401).json("not authorized, admin action only"); 
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(400).json(error.message);
-    }
-};
+// exports.editMap = async (req, res, next) => {
+//     try {
+//         const _id  = req.id; 
+//         const type = req.type;
+//         if(type == "admin"){
+//             const update = req.body;
+//             const admin = await Entity_Admin.findOne({_id},{role:1,_id:0});
+//             //console.log(admin)
+//             if(admin.role=='p_admin'){
+//                 const updated = await Pharmacy.updateOne({admin:_id},update);
+//                 if(updated.matchedCount==1 && updated.modifiedCount==1){
+//                     return res.status(200).json("position has been updated successfully");
+//                 }
+//                 else{
+//                     res.status(400).json("no change");
+//                 }
+//             }
+//             else if((admin.role=='h_admin') || (admin.role=='c_admin')){
+//                 const updated = await Entity.updateOne({admin:_id},update);
+//                 if(updated.matchedCount==1 && updated.modifiedCount==1){
+//                     return res.status(200).json("position has been updated successfully");
+//                 }
+//                 else{
+//                     res.status(400).json("no change");
+//                 }
+//             }
+//             else{
+//                 res.status(400).json("you are not an entity admin!!");
+//             }
+//         }
+//         else{
+//            res.status(401).json("not authorized, admin action only"); 
+//         }
+//     } catch (error) {
+//         console.log(error);
+//         res.status(400).json(error.message);
+//     }
+// };
 
 exports.addAnnounce = async (req, res, next) => {
     try {
@@ -389,7 +393,7 @@ exports.getAge = async(req, res, next) =>{
         //{$year:new Date("$dateOfBirth")},
         if(type == "admin"){
             const males = await User.aggregate([
-                { $match: { gender:"Male"}},
+                { $match: { gender:"Male", dateOfBirth:{$ne:null}}},
                 {$group:{
                 _id:{ $dateDiff: { startDate: "$dateOfBirth",
                                 endDate: "$$NOW",
@@ -397,7 +401,7 @@ exports.getAge = async(req, res, next) =>{
                 count:{$sum:1}
             }}]);
             const females = await User.aggregate([
-                { $match: { gender:"Female"}},
+                { $match: { gender:"Female", dateOfBirth:{$ne:null}}},
                 {$group:{
                 _id:{ $dateDiff: { startDate: "$dateOfBirth",
                                 endDate: "$$NOW",

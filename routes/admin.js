@@ -23,7 +23,7 @@ router.route("/admin/order/disapprove").patch(protect,disApproveOrder);
 router.route("/admin/order/done").patch(protect,finishOrder);
 router.route("/admin/edit").patch(protect,editAdminInfo);
 //
-router.route("/admin/edit/map").patch(protect,editMap);
+//router.route("/admin/edit/map").patch(protect,editMap);
 //
 router.route("/admin/announcement/delete").delete(protect,deleteAnnounce);
 router.route("/admin/announcement/edit").patch(protect,editAnnounce);
