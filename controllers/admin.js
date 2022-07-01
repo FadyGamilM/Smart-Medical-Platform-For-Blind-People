@@ -99,21 +99,26 @@ exports.getActiveProfit = async (req, res, next) => {
             {path: "doctor", select: {username:1,entity_id:1, _id:0},populate:{path: "entity_id", select: {name:1,flag:1, _id:0}}}); 
             //console.log(meetings);
             //console.log(meetings.length);
+            ////////
+            const orders = await Order.find({"order_data.Date":{$gte:start,$lte:end}, status:"delivered"},{price:1,pharmacy:1,_id:0}).populate( {path: "pharmacy", select: {name:1, _id:0}}); 
+            //console.log(orders);  
             var hospitals = {};
             var clinics = {};
-            // for(let x in meetings){
-            //     if(meetings[x]["price"] > 0){
-            //         if(dict[meetings[x]["doctor"]["entity_id"]["name"]] > 0){
-            //             dict[meetings[x]["doctor"]["entity_id"]["name"]] += meetings[x]["price"];
-            //         }
-            //         else{
-            //             dict[meetings[x]["doctor"]["entity_id"]["name"]] = meetings[x]["price"];
-            //         }
-                    
-            //     }else{
-            //         continue;
-            //     }
-            // }
+            ///////
+            var pharmacies ={};
+            for(let x in orders){
+                if(orders[x]["price"] > 0){
+                    if(pharmacies[orders[x]["pharmacy"]["name"]] > 0){
+                        pharmacies[orders[x]["pharmacy"]["name"]] += orders[x]["price"];
+                    }
+                    else{
+                        pharmacies[orders[x]["pharmacy"]["name"]] = orders[x]["price"];
+                    }
+                }else{
+                    continue;
+                }
+            }
+
             for(let x in meetings){
                 if(meetings[x]["price"] > 0){
                     if(meetings[x]["doctor"]["entity_id"]["flag"]=='H'){
@@ -152,7 +157,7 @@ exports.getActiveProfit = async (req, res, next) => {
             // }
             // const hospital = [maxKey_H,maxValue_H];
             // const clinic = [maxKey_C,maxValue_C];
-            res.status(200).json({hospitals , clinics});
+            res.status(200).json({hospitals , clinics, pharmacies});
             // console.log("maxkey: ",maxKey);
             // console.log("maxValue: ",maxValue);
             // console.log(dict_H[maxKey]);
@@ -409,17 +414,55 @@ exports.getAge = async(req, res, next) =>{
                 count:{$sum:1}
             }}]);
             //////////////////////
-            var dict = {};
+            //console.log("males:",males);
+            //console.log("females:",females); 
+            var dict = {
+                "<20":[0,0],
+                "20-35":[0,0],
+                "35-50":[0,0],
+                "50-70":[0,0],
+                ">70":[0,0]
+            };
+            // for (let x in males) {
+            //     // code block to be executed
+            //     dict[males[x]._id]=[males[x].count,0]
+            // };
+            // for (let x in females) {
+            //     // code block to be executed
+            //     if( dict[females[x]._id]){
+            //         dict[females[x]._id]=[ dict[females[x]._id][0], females[x].count]
+            //     }else{
+            //         dict[females[x]._id]=[ 0, females[x].count]
+            //     }
+            // };
             for (let x in males) {
                 // code block to be executed
-                dict[males[x]._id]=[males[x].count,0]
+                if(males[x]._id < 20){
+                    dict["<20"][0] +=males[x].count
+                }
+                else if(males[x]._id>= 20 && males[x]._id <= 35){
+                    dict["20-35"][0] +=males[x].count
+                }else if(males[x]._id> 35 && males[x]._id <= 50){
+                    dict["35-50"][0] +=males[x].count
+                }else if(males[x]._id> 50 && males[x]._id <= 70){
+                    dict["50-70"][0] +=males[x].count
+                }else if(males[x]._id > 70){
+                    dict[">70"][0] +=males[x].count
+                }
             };
             for (let x in females) {
                 // code block to be executed
-                if( dict[females[x]._id]){
-                    dict[females[x]._id]=[ dict[females[x]._id][0], females[x].count]
-                }else{
-                    dict[females[x]._id]=[ 0, females[x].count]
+                if(females[x]._id < 20){
+                    dict["<20"][1] +=females[x].count
+                }
+                else if(females[x]._id>= 20 && females[x]._id <= 35){
+                    dict["20-35"][1] +=females[x].count
+                }else if(females[x]._id> 35 && females[x]._id <= 50){
+                    dict["35-50"][1] +=females[x].count
+                }else if(females[x]._id> 50 && females[x]._id <= 70){
+                    dict["50-70"][1] +=females[x].count
+                }else if(females[x]._id > 70){
+                    dict[">70"][1] +=females[x].count
                 }
             };
             /////////////////
