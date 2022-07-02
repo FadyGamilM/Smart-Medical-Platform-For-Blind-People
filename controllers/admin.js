@@ -172,7 +172,7 @@ exports.getActiveProfit = async (req, res, next) => {
             
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -255,7 +255,7 @@ exports.editAdminInfo = async(req,res,next) => {
             }
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -295,7 +295,7 @@ exports.editAdminInfo = async(req,res,next) => {
 //             }
 //         }
 //         else{
-//            res.status(401).json("not authorized, admin action only"); 
+//            res.status(403).json("Forbidden, admin action only"); 
 //         }
 //     } catch (error) {
 //         console.log(error);
@@ -316,7 +316,7 @@ exports.addAnnounce = async (req, res, next) => {
             res.status(200).json("announcement has been added successfully"); 
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -338,7 +338,7 @@ exports.deleteAnnounce = async (req, res, next) => {
             }
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -362,7 +362,7 @@ exports.editAnnounce = async (req, res, next) => {
             }
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -383,7 +383,7 @@ exports.getAnnounce = async (req, res, next) => {
             res.status(200).json(announcements); 
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -475,7 +475,7 @@ exports.getAge = async(req, res, next) =>{
             //res.status(200).json({males,females});
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -533,7 +533,7 @@ exports.getAge = async(req, res, next) =>{
 //             // res.status(200).json("announcement has been added successfully"); 
 //         }
 //         else{
-//            res.status(401).json("not authorized, admin action only"); 
+//            res.status(403).json("Forbidden, admin action only"); 
 //         }
 //     } catch (error) {
 //         console.log(error);
@@ -559,7 +559,7 @@ exports.getAppointments = async (req,res,next) => {
             }
         }
         else{
-            res.status(401).json("not authorized, admin action only"); 
+            res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -585,7 +585,7 @@ exports.getAllOrders = async (req,res,next) => {
             }
         }
         else{
-            res.status(401).json("not authorized, admin action only"); 
+            res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -618,7 +618,7 @@ exports.getPendingOrders = async (req, res, next) =>{
             }
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -651,7 +651,7 @@ exports.getApprovedOrders = async (req, res, next) =>{
             }
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -685,7 +685,7 @@ exports.getPreparingOrders = async (req, res, next) =>{
             }
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -716,7 +716,7 @@ exports.getHistory = async (req, res, next) =>{
             }
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -754,7 +754,7 @@ exports.approveOrder = async (req, res, next) =>{
             }
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -790,7 +790,7 @@ exports.disApproveOrder = async (req, res, next) =>{
             }
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -814,7 +814,7 @@ exports.finishOrder = async (req, res, next) =>{
             }
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -842,7 +842,7 @@ exports.getAppointmentsOfentity = async (req,res,next) => {
             }
         }
         else{
-            res.status(401).json("not authorized, admin action only"); 
+            res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -876,7 +876,7 @@ exports.deactivateEntity = async (req,res,next) =>{
             }
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -919,7 +919,7 @@ exports.deactivatePharmacy = async (req,res,next) =>{
             }
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -943,7 +943,7 @@ exports.deactivateDoctor = async (req,res,next) =>{
             }
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -973,7 +973,7 @@ exports.getDeactivatedClinics = async (req, res, next) => {
             }
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
 	} catch (error) {
 		console.log(error);
@@ -1003,7 +1003,7 @@ exports.getDeactivatedHospitals = async (req, res, next) => {
             }
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
 	} catch (error) {
 		console.log(error);
@@ -1033,7 +1033,7 @@ exports.getDeactivatedPharmacies = async (req, res, next) => {
             }
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
 	} catch (error) {
 		console.log(error);
@@ -1062,7 +1062,7 @@ exports.getDeactivatedDoctors = async (req, res, next) => {
             }
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
 	} catch (error) {
 		console.log(error);
@@ -1095,7 +1095,7 @@ exports.getDeactivatedDoctorsOfEntity = async (req, res, next) => {
             }
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
 	} catch (error) {
 		console.log(error);
@@ -1117,7 +1117,7 @@ exports.activateEntity = async (req,res,next) => {
             }
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -1139,7 +1139,7 @@ exports.activatePharmacy = async (req,res,next) => {
             }
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -1161,7 +1161,7 @@ exports.activateDoctor = async (req,res,next) => {
             }
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -1182,7 +1182,7 @@ exports.editDoctorPrice = async (req,res,next) => {
             }
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -1204,7 +1204,7 @@ exports.getComplaints = async (req, res, next) => {
             res.status(200).json(complaints); 
         }
         else{
-           res.status(401).json("not authorized, admin action only"); 
+           res.status(403).json("Forbidden, admin action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -1262,7 +1262,7 @@ exports.getComplaints = async (req, res, next) => {
 //             //res.status(200).json("Doctor is deactivated"); 
 //         }
 //         else{
-//            res.status(401).json("not authorized, admin action only"); 
+//            res.status(403).json("Forbidden, admin action only"); 
 //         }
 //     } catch (error) {
 //         console.log(error);

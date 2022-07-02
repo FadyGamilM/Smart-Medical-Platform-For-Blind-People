@@ -79,8 +79,8 @@ exports.registerUser = async(req,res,next) =>{
             return res.status(200).json(returns);
         }
         else{
-            res.status(400);
-            throw Error("email already exist");
+            res.status(400).json("email already exist");
+            //throw Error("email already exist");
         }
         
     } catch (error) {
