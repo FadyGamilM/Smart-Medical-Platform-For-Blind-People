@@ -9,7 +9,7 @@ const {addAnnounce, getAnnounce,getPendingOrders,
     getDeactivatedClinics,getDeactivatedHospitals,
     getDeactivatedPharmacies,getDeactivatedDoctors,
     getDeactivatedDoctorsOfEntity,editDoctorPrice,
-    getActiveProfit,editMap} = require("../controllers/admin");
+    getActiveProfit,editMap,getComplaints} = require("../controllers/admin");
 const { protect } = require("../middleware/authMiddleware");
 
 router.route("/admin/announcement").post(protect,addAnnounce);
@@ -51,5 +51,5 @@ router.route("/admin/dashboard/profit/:startDate/:endDate").get(protect,getActiv
 // trial
 //router.route("/admin/edit/entity/activity").patch(editEntityActivity);
 //router.route("/admin/edit/pharmacy/activity").patch(editPharmacyActivity);
-
+router.route("/admin/getComplaints").get(protect,getComplaints);
 module.exports = router;

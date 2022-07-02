@@ -7,7 +7,7 @@ const Order = require("../models/Order");
 const Meeting = require("../models/Meeting");
 const User = require("../models/User");
 const Entity_Admin = require("../models/Entity_Admin");
-
+const Complaint = require("../models/Complaint");
 
 exports.getActiveProfit = async (req, res, next) => {
     try { 
@@ -1180,6 +1180,28 @@ exports.editDoctorPrice = async (req,res,next) => {
             else{
                 res.status(400).json("couldn't update");
             }
+        }
+        else{
+           res.status(401).json("not authorized, admin action only"); 
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
+
+exports.getComplaints = async (req, res, next) => {
+    try {
+        const _id  = req.id; 
+        const type = req.type;
+        if(type == "admin"){
+            const complaints = await Complaint.find({},{
+                complaint:1,
+                owner:1,
+                _id:0
+            }).populate({path:"owner",select: {username:1,email:1, _id:0}});
+            
+            res.status(200).json(complaints); 
         }
         else{
            res.status(401).json("not authorized, admin action only"); 

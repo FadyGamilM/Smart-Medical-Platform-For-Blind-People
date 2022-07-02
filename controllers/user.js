@@ -5,6 +5,7 @@ const Meeting = require("../models/Meeting");
 const User = require("../models/User");
 const Order = require("../models/Order");
 const Prescription = require("../models/Prescription");
+const Complaint = require("../models/Complaint");
 
 exports.rateDoctor = async (req, res, next) =>{
     try {
@@ -453,6 +454,28 @@ exports.editHistory = async (req,res,next) => {
         else{
             res.status(400).json("no change");
         }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
+
+exports.addComplaint = async (req, res, next) => {
+    try {
+        const _id  = req.id; 
+        const type = req.type;
+        const complaint = await Complaint.create({
+            complaint:{
+                form: req.body.form,
+                contact_number:req.body.number,
+                contact_mail:req.body.mail,
+                issuedAt:new Date()
+            },
+            owner:_id
+        });
+        //console.log(complaint);
+        res.status(200).json("complaint has been added successfully"); 
+        
     } catch (error) {
         console.log(error);
         res.status(400).json(error.message);
