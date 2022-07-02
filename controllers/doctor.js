@@ -62,7 +62,7 @@ exports.setTimeTable = async (req, res, next) =>{
             //res.status(200).json("timetable has been updated successfully"); 
         }
         else{
-           res.status(401).json("not authorized, doctor action only"); 
+           res.status(403).json("Forbidden, doctor action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -171,7 +171,7 @@ exports.savePrescription = async (req, res, next) =>{
 
         }
         else{
-           res.status(401).json("not authorized, doctor action only"); 
+           res.status(403).json("Forbidden, doctor action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -194,7 +194,7 @@ exports.getMeetings = async (req,res,next) =>{
             }
         }
         else{
-           res.status(401).json("not authorized, doctor action only"); 
+           res.status(403).json("Forbidden, doctor action only"); 
         }
     } catch (error) {
         console.log(error);
@@ -230,15 +230,15 @@ exports.removeTime = async (req, res, next) =>{
                     t += 1;
                 }
             };
-            console.log(day);
-            console.log(from);
-            console.log(to);
-            console.log(slots);
+            //console.log(day);
+            //console.log(from);
+            //console.log(to);
+            //console.log(slots);
             /////////////////////////////////////////////////////////
             //check first that no one is reserving during this time
             //Date>=today
             const today = new Date();
-            console.log(today);
+            //console.log(today);
             //we have to set today time to 0
             const meetings = await Meeting.find({doctor:_id ,Date:{ $gte: today },day ,slot:{$in:slots}},{_id:1});
             //remove from timetable the object with certain day and from ,to
@@ -260,7 +260,7 @@ exports.removeTime = async (req, res, next) =>{
             }
         }
         else{
-           res.status(401).json("not authorized, doctor action only"); 
+           res.status(403).json("Forbidden, doctor action only"); 
         }
     } catch (error) {
         console.log(error);

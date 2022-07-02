@@ -1,0 +1,455 @@
+status meaning:
+
+200 OK
+Indicates that the request has succeeded.
+
+401 Unauthorized
+This status code means you haven’t yet authenticated against the API. 
+The API doesn’t know who you are and so it won’t serve you.
+For most APIs you need to sign up and get an API key. 
+This key is then used inside an HTTP header field when you send a request, 
+telling the API who you are.
+
+403 Forbidden
+The forbidden status indicates that you don’t have permission to request that URL. 
+The difference to the Unauthorized status is that you’re authenticated,
+but the user or role you’re authenticated for isn’t permitted to make the request.
+This also occurs when you have an authentication issue, like when using the wrong API key 
+or trying to access features your subscription plan doesn’t allow for.
+
+400 Bad Request
+The bad request status is one of the most generic error messages. 
+It implies that you did something wrong in your request. 
+If no additional error information is given in the response body, 
+you have to check the docs. You could be missing a query or body field in the request, 
+or a header could be wrong. It could also be that some of your request data might have 
+the an incorrect format.
+
+
+
+
+admin routes:
+all protected(need token):
+ -->return res.status(401).json("not authorized, no token is sent") if no token sent
+ -->return res.status(401).json("not authorized, token is failed") if token is not valid
+
+1)"/admin/announcement" :
+ -->res.status(200).json("announcement has been added successfully") if all is oki and announcement has been added successfully
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+
+2)"/admin/getAnnouncements":
+ -->res.status(200).json(announcements) if all is oki return announcements
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+3)"/admin/orders/pending":
+ -->res.status(200).json(orders) if all is ok and there are pending orders
+ -->res.status(200).json("there is no pending orders") if all is ok but there are no pending orders
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin or this admin is not pharmacy admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+4)"/admin/orders/approved":
+ -->res.status(200).json(orders) if all is ok and there are approved orders
+ -->res.status(200).json("there is no approved orders") if all is ok but there are no approved orders
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin or this admin is not pharmacy admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+5)"/admin/orders/preparing":
+ -->res.status(200).json(orders) if all is ok and there are preparing orders
+ -->res.status(200).json("there is no preparing orders") if all is ok but there are no preparing orders
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin or this admin is not pharmacy admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+6)"/admin/orders/history":
+ -->res.status(200).json(orders) if all is ok and there are history orders(disapproved ,cancelled ,delivered)
+ -->res.status(200).json("there is no history") if all is ok but there are no orders in history
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin or this admin is not pharmacy admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+7)"/admin/order/approve":
+ -->res.status(200).json("the order is approved") if all is ok and order has been approved
+ -->res.status(400).json("couldn't approve order") if couldn't find this order or update it
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin or this admin is not pharmacy admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+8)"/admin/order/disapprove":
+ -->res.status(200).json("the order is disapproved") if all is ok and order has been disapproved
+ -->res.status(400).json("couldn't disapprove order") if couldn't find this order or update it
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin or this admin is not pharmacy admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+9)"/admin/order/done":
+ -->res.status(200).json("done") if all is ok and order status changed to delivered
+ -->res.status(400).json("something wrong happened") if couldn't find this order or update it
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin or this admin is not pharmacy admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+10)"/admin/edit":
+ -->res.status(400).json("this email already found") if email entered is already found 
+ -->res.status(200).json("you edited your profile successfully") if all is ok and update is done successfully
+ -->res.status(400).json("this entity name already found") if entity name entered is already found
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+11)"/admin/edit/map": cancelled
+
+12)"/admin/announcement/delete":
+ -->res.status(200).json("anouncement has been deleted successfully") if all is ok and announcement has been deleted
+ -->res.status(400).json("couldn't delete announcement") if couldn't delete announcement
+ -->res.status(403).json("Forbidden, admin action only")  if type in token is not admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+13)"/admin/announcement/edit":
+ -->res.status(200).json("anouncement has been updated successfully") if all is ok and announcement has been updated
+ -->res.status(400).json("no change") if couldn't find this announcement or no change has been done 
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+14)"/admin/appointments":
+ -->res.status(200).json("no appointments available") if no appointments available
+ -->res.status(200).json(appointments) if all is ok return all appointments
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin
+ -->res.status(400).json(error.message)  for any other unexpected error
+
+15)"/admin/orders":
+ -->res.status(200).json("no orders available") if no orders available
+ -->res.status(200).json(orders)  if all is ok return all orders
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+16)"/admin/appointments/:entity":
+ -->res.status(200).json("no appointments available") if no appointments for this entity available
+ -->res.status(200).json(appointments) if all is ok return all appointments of doctors related to this entity
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+17)"/admin/entity/deactivate":
+ -->res.status(200).json("Entity is deactivated") if all is  ok and entity has been deactivated
+ -->res.status(400).json("couldn't deactivate entity") if couldn't deactivate entity
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+18)"/admin/doctor/deactivate":
+ -->res.status(200).json("Doctor is deactivated") if all is  ok and doctor has been deactivated
+ -->res.status(400).json("couldn't deactivate doctor") if couldn't deactivate doctor
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+19)"/admin/pharmcy/deactivate":
+ -->res.status(200).json("Pharmacy is deactivated") if all is  ok and pharmacy has been deactivated
+ -->res.status(400).json("couldn't deactivate pharmacy") if couldn't deactivate pharmacy
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+20)"/admin/dashboard/ages":
+ -->res.status(200).json(dict) if all is ok return info of ages
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+21)"/admin/hospitals/deactivated":
+ -->res.status(200).json(hospitals) if all is ok return all deactivated hospitals
+ -->res.status(200).json("there is no deactivated hospitals") if no deactivated hospitals
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+22)"/admin/clinics/deactivated":
+ -->res.status(200).json(clinics) if all is ok return all deactivated hospitals
+ -->res.status(200).json("there is no deactivated clinics") if no deactivated hospitals
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+23)"/admin/pharmacies/deactivated":
+ -->res.status(200).json(pharmacies) if all is ok return all deactivated pharmacies
+ -->res.status(200).json("there is no deactivated pharmacies") if no deactivated pharmacies
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+24)"/admin/doctors/deactivated":
+ -->res.status(200).json(doctors) if all is ok return all deactivated doctors
+ -->res.status(200).json("there is no deactivated doctors") if no deactivated doctors
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+25)"/admin/doctors/deactivated/:entity":
+ -->res.status(200).json(doctors) if all is ok return all deactivated doctors of this entity
+ -->res.status(200).json("this entity has no deactivated doctors") if no deactivated doctors
+ -->res.status(400).json("no entity found with this name") if entity is not found
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+26)"/admin/entity/activate":
+ -->res.status(200).json("entity is activated") if all is ok and entity has been activated 
+ -->res.status(400).json("couldn't activate") if couldn't find this entity or update it
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+27)"/admin/pharmcy/activate":
+ -->res.status(200).json("pharmacy is activated") if all is ok and pharmacy has been activated 
+ -->res.status(400).json("couldn't activate") if couldn't find this pharmacy or update it
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+28)"/admin/doctor/activate":
+ -->res.status(200).json("doctor is activated") if all is ok and doctor has been activated 
+ -->res.status(400).json("couldn't activate") if couldn't find this doctor or update it
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+29)"/admin/doctor/edit/price":
+ -->res.status(200).json("meeting price is updated") if all is ok and price is updated
+ -->res.status(400).json("couldn't update") if couldn't find this doctor or update it
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+30)"/admin/dashboard/profit/:startDate/:endDate":
+ -->res.status(200).json({hospitals , clinics}) if all is ok return profit of hospitals and clinics
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+31)"/admin/getComplaints":
+ -->res.status(200).json(complaints) if all is ok return all complaints
+ -->res.status(403).json("Forbidden, admin action only") if type in token is not admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+
+user routes:
+all protected(need token) except 1,2,3,4,6 :
+ -->return res.status(401).json("not authorized, no token is sent") if no token sent
+ -->return res.status(401).json("not authorized, token is failed") if token is not valid
+
+1)"/user/rating/doctor/:doctorname":
+ -->res.status(200).json("successfull rating") if all is ok 
+ -->res.status(400).json("couldn't update") if couldn't find this doctor or update it
+ -->res.status(400).json(error.message) for any other unexpected error
+
+2)"/user/department/:depName":
+ -->res.status(200).json(doctors) if all is ok and length of doctors != 0
+ -->res.status(200).json("no doctors found in this department") if all is ok but length of doctors = 0
+ -->res.status(400).json("no department is chosen") if no department is sent in params
+ -->res.status(400).json(error.message) for any other unexpected error
+
+3)"/user/doctor/:doctorname":
+ -->res.status(200).json(doctor) if all is ok and doctor email sent in params is found
+ -->res.status(400).json("no doctor found with this name") if doctor email sent in params isn't found
+ -->res.status(400).json(error.message) for any other unexpected error
+
+4)"/user/review/doctor/:doctorname":
+ -->res.status(200).json("your review has been added successfully") if all is ok
+ -->res.status(400).json("couldn't update") if couldn't find this doctor or update it
+ -->res.status(400).json(error.message) for any other unexpected error
+
+5)"/user/reservation/meeting":
+ -->res.status(200).json("you reserved meeting successfully") if all is ok
+ -->res.status(400).json(error.message) for any other unexpected error
+
+6)"/user/timetable/:doctorname/:date":
+ -->res.status(200).json(reserved) if all is ok return reserved slots if length != 0
+ -->res.status(200).json("no reservations in this date") if no reservations in this date
+ -->res.status(400).json(error.message) for any other unexpected error
+
+7)"/user/orders":
+ -->res.status(200).json(orders) if all is ok return orders if length != 0
+ -->res.status(200).json("you have no orders yet") if length of orders =0 (no orders)
+ -->res.status(400).json(error.message) for any other unexpected error
+
+8)"/user/meetings":
+ -->res.status(200).json(meetings) if all is ok return meetings if length != 0
+ -->res.status(200).json("you have no meetings yet") if length of meetings =0 (no meetings)
+ -->res.status(400).json(error.message) for any other unexpected error
+
+9)"/user/prescriptions":
+ -->res.status(200).json(prescriptions) if all is ok return prescriptions if length != 0
+ -->res.status(200).json("you have no prescriptions yet") if length of prescriptions =0 (no prescriptions )
+ -->res.status(400).json(error.message) for any other unexpected error
+
+10)"/user/pharmacy/order":
+ -->res.status(200).json("order added successfully") if all is ok
+ -->res.status(400).json("there is something wrong with admin email or pharmacy") if admin email sent in body is inncorrect or it's not an pharmacy admin
+ -->res.status(400).json(error.message) for any other unexpected error
+
+11)"/user/order/cancel":
+ -->res.status(200).json("user canceled order") if all is ok
+ -->res.status(400).json("couldn't cancel order") if couldn't find this order or update it
+ -->res.status(400).json(error.message) for any other unexpected error
+
+12)"/user/order/approve":
+ -->res.status(200).json("user approved order") if all is ok
+ -->res.status(400).json("couldn't approve order") if couldn't find this order or update it
+ -->res.status(400).json(error.message) for any other unexpected error
+
+13)"/user/edit/photo":
+ -->res.status(200).json("you edited your profile successfully") if all is ok
+ -->res.status(400).json("no change") if couldn't find this user or user didn't change photo
+ -->res.status(400).json(error.message) for any other unexpected error
+
+14)"/user/edit/history":
+ -->res.status(200).json("you edited your history successfully") if all is ok
+ -->res.status(400).json("no change") if couldn't find this user or user didn't change his history
+ -->res.status(400).json(error.message) for any other unexpected error
+
+15)"/user/edit/info":
+ -->res.status(400).json("this email already found") if email entered by user already found so he cann't update his email by this new email
+ -->res.status(200).json("you edited your info successfully") if all is ok
+ -->res.status(400).json("no change") if couldn't find this user or user didn't change his info
+ -->res.status(400).json(error.message) for any other unexpected error
+
+16)"/user/order/:pharmacy/:date":
+ -->res.status(200).json(order) if all is ok return orders in this date
+ -->res.status(200).json("you have no orders yet") if no orders in this date
+ -->res.status(400).json(error.message) for any other unexpected error
+
+17)"/user/complaint":
+ -->res.status(200).json("complaint has been added successfully") if all is ok
+ -->res.status(400).json(error.message) for any other unexpected error
+
+auth routes:
+
+1)"/register":
+ -->res.status(200).json(returns) if all is ok
+ -->res.status(400).json("email already exist") if email is already found
+ -->res.status(400).json(error.message) for any other unexpected error
+
+2)"/login":
+ -->throw Error("incorrect password") if password is incorrect
+ -->throw Error("incorrect email") if email entered is not found
+ -->res.status(200).json(returns) if all is ok
+ -->res.status(400).json(error.message) for any other unexpected error
+
+3)"/login/doctor":
+ -->res.status(200).json(returns) if all is ok
+ -->throw Error("incorrect email") if email is not found
+ -->throw Error("incorrect password") if password is inncorrect
+ -->res.status(400).json(error.message) for any other unexpected error
+
+4)"/register/doctor":
+ -->throw Error("This entity doesn't exist") if entity name sent in body is not found
+ -->return res.status(200).send("doctor has been added successfully.") if all is ok
+ -->throw Error("email already exist") if email is already found
+ -->res.status(400).json(error.message) for any other unexpected error
+
+5)"/register/hospitalAdmin":
+ -->res.status(200).send("hospital and admin have been added successfully.") if all is ok
+ -->res.status(400).json("this email already exists") if email of hospital admin is already exist
+ -->res.status(400).json("hospital already exists") if name or arabic name of hospital is already found 
+ -->res.status(400).json(error.message) for any other unexpected error
+
+6)"/register/clinicAdmin":
+ -->res.status(200).send("clinic and admin have been added successfully.") if all is ok
+ -->res.status(400).json("this email already exists") if email of clinic admin is already exist
+ -->res.status(400).json("clinic already exists") if name or arabic name of clinic is already found 
+ -->res.status(400).json(error.message) for any other unexpected error
+
+7)"/register/pharmacyAdmin":
+ -->res.status(200).send("pharmacy and admin have been added successfully.") if all is ok
+ -->res.status(400).json("this email already exists") if email of pharmacy admin is already exist
+ -->res.status(400).json("pharmacy already exists") if name or arabic name of pharmacy is already found 
+ -->res.status(400).json(error.message) for any other unexpected error
+
+clinic routes:
+
+1)"/clinics":
+ -->res.status(200).json(clinics) if all is ok
+ -->res.status(400).json(error.message) for any other unexpected error
+
+2)"/clinics/arabic":
+ -->res.status(200).json(clinics) if all is ok
+ -->res.status(400).json(error.message) for any other unexpected error
+
+doctor routes:
+all protected(need token) except 1,2 :
+ -->return res.status(401).json("not authorized, no token is sent") if no token sent
+ -->return res.status(401).json("not authorized, token is failed") if token is not valid
+
+1)"/entity/:entity/doctors":
+
+ -->res.status(200).json(doctors) if all is ok return doctors
+ -->res.status(200).json("this entity has no doctors right now") if length of doctors  =0
+ -->res.status(400).json("no entity found with this name") if name or arabic name of entity sent in params is not found
+ -->res.status(400).json(error.message) for any other unexpected error
+
+2)"/doctors/arabic":
+ -->res.status(200).json(doctors) if all is ok return doctors 
+ -->res.status(400).json(error.message) for any other unexpected error
+
+3)"/doctor/timetable/cancel":
+ -->res.status(200).json("timetable has been updated successfully") if all is ok
+ -->res.status(400).json("couldn't update") if couldn't find this doctor or update it
+ -->res.status(200).json("you have meetings in this day, you can't delete this time") if doctor has meetings in this day so cann't remove it from timetable
+ -->res.status(403).json("Forbidden, doctor action only") if type in token  is not doctor
+ -->res.status(400).json(error.message) for any other unexpected error
+
+4)"/doctor/edit/info":
+ -->res.status(400).json("this email already found") if email entered by doctor is already found so he cann't update his email by this new email
+ -->res.status(200).json("you edited your info successfully") if all is ok
+ -->res.status(400).json("no change") if couldn't find this doctor or update it
+ -->res.status(400).json(error.message) for any other unexpected error
+
+5)"/doctor/edit/photo":
+res.status(200).json("you edited your profile successfully") if all is ok
+res.status(400).json("no change") if couldn't find this doctor or update it
+res.status(400).json(error.message) for any other unexpected error
+
+6)"/doctor/timetable":
+ -->res.status(200).json("timetable has been updated successfully") if all is ok
+ -->res.status(400).json("couldn't update") if couldn't find this doctor or update it
+ -->res.status(403).json("Forbidden, doctor action only") if type in token  is not doctor
+ -->res.status(400).json(error.message) for any other unexpected error
+
+7)"/doctor/prescription/save":
+ -->res.status(200).json("prescription has been saved") if all is ok
+ -->res.status(403).json("Forbidden, doctor action only") if type in token  is not doctor
+ -->res.status(400).json(error.message) for any other unexpected error
+
+8)"/doctor/meetings":
+ -->res.status(200).json(meetings) if all is ok return meetings
+ -->res.status(200).json("you have no meetings yet") if meetings length =0
+ -->res.status(403).json("Forbidden, doctor action only") if type in token  is not doctor
+ -->res.status(400).json(error.message) for any other unexpected error
+
+home routes:
+
+1)"/home":
+ -->res.status(200).json({doctors,announcements}) if all is ok
+ -->res.status(400).json(error.message) for any other unexpected error
+
+2)"/entities/info":
+ -->res.status(200).json(data) if all is ok
+ -->res.status(200).json("no data") if data length =0
+ -->res.status(400).json(error.message) for any other unexpected error
+
+hospital routes:
+
+1)"/hospitals":
+ -->res.status(200).json(hospitals) if all is ok
+ -->res.status(400).json(error.message) for any other unexpected error
+
+2)"/hospitals/arabic":
+ -->res.status(200).json(hospitals) if all is ok
+ -->res.status(400).json(error.message) for any other unexpected error
+
+pharmacy routes:
+
+1)"/pharmacies":
+ -->res.status(200).json(pharmacies) if all is ok
+ -->res.status(400).json(error.message) for any other unexpected error
+
+2)"/pharmacies/arabic":
+ -->res.status(200).json(pharmacies) if all is ok
+ -->res.status(400).json(error.message) for any other unexpected error
+
+profile routes:
+all protected(need token) except 2 :
+ -->return res.status(401).json("not authorized, no token is sent") if no token sent
+ -->return res.status(401).json("not authorized, token is failed") if token is not valid
+
+1)"/profile":
+ -->res.status(200).json(returns) if all is ok
+ -->res.status(400).json(error.message) for any other unexpected error
+
+2)"/profile/user/:userEmail":
+res.status(200).json(returns) if all is ok
+res.status(400).json("User not found ") if user emailsent in params is not found
+res.status(400).json(error.message) for any other unexpected error
+
