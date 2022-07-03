@@ -111,6 +111,7 @@ exports.registerDoctor = async(req,res,next) =>{
                     email:req.body.email,
                     password:req.body.password,
                     gender:req.body.gender,
+                    university:req.body.university,
                     profilePic: req.body.profilePic,
                     specialization:req.body.specialization,
                     arabic_specialization:req.body.arabic_specialization,

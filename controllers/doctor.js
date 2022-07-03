@@ -90,7 +90,8 @@ exports.editDoctorInfo = async (req,res,next) => {
             //"gender":"",
             //"dateOfBirth":"",
             //"bio":"",
-            //"telephone":""
+            //"telephone":"",
+            //"university":""
         const doctor_id  = req.id;
         if(req.body.email){
             const doctor = await Doctor.findOne({email:req.body.email, _id:{ $ne: doctor_id }});
