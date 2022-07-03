@@ -1081,7 +1081,9 @@ exports.getDeactivatedDoctorsOfEntity = async (req, res, next) => {
                     _id:0,
                     username:1,
                     email:1,
-                    specialization:1
+                    specialization:1,
+                    telephone:1,
+                    meeting_price:1
                 });
                 if(doctors.length != 0){
                     return res.status(200).json(doctors);
