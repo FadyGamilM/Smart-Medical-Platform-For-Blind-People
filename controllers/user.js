@@ -15,27 +15,32 @@ exports.rateDoctor = async (req, res, next) =>{
         //console.log("newrating=",newRating);
         //console.log(typeof newRating);
         const doctor = await Doctor.findOne({email},{rate:1, rate_count:1});
-        const oldRating = doctor.rate;
-        const ratingCount = doctor.rate_count;
-        //console.log("oldRating",oldRating);
-        //console.log("ratingCount",ratingCount);
-        //((old Rating * Rating count) + new Rating) / (Rating count + 1)
-        const newRate = ((oldRating * ratingCount) + newRating) / (ratingCount + 1);
-        const rate = Math.round(newRate);
-        //console.log("newRate: ",newRate);
-        //console.log("Rate: ",rate);
-        //console.log(typeof newRate);
-        const updated = await Doctor.updateOne({email},{ $set: { "rate" : rate }, $inc: { "rate_count": 1 } });
-        // const updated = await Doctor.findByIdAndUpdate( 
-        // {_id:doctorId},
-        // {$set: { "rate" : ((this.rate * this.rate_count) + newRating) / (this.rate_count + 1) }, $inc: { "rate_count": 1 }}
-        // );
-    
-        if(updated.matchedCount==1 && updated.modifiedCount==1){
-            return res.status(200).json("successfull rating");
+        if(!doctor){
+            res.status(400).json("no doctor found with this name");
         }
         else{
-            res.status(400).json("couldn't update");
+            const oldRating = doctor.rate;
+            const ratingCount = doctor.rate_count;
+            //console.log("oldRating",oldRating);
+            //console.log("ratingCount",ratingCount);
+            //((old Rating * Rating count) + new Rating) / (Rating count + 1)
+            const newRate = ((oldRating * ratingCount) + newRating) / (ratingCount + 1);
+            const rate = Math.round(newRate);
+            //console.log("newRate: ",newRate);
+            //console.log("Rate: ",rate);
+            //console.log(typeof newRate);
+            const updated = await Doctor.updateOne({email},{ $set: { "rate" : rate }, $inc: { "rate_count": 1 } });
+            // const updated = await Doctor.findByIdAndUpdate( 
+            // {_id:doctorId},
+            // {$set: { "rate" : ((this.rate * this.rate_count) + newRating) / (this.rate_count + 1) }, $inc: { "rate_count": 1 }}
+            // );
+        
+            if(updated.matchedCount==1 && updated.modifiedCount==1){
+                return res.status(200).json("successfull rating");
+            }
+            else{
+                res.status(400).json("couldn't update");
+            }
         }
     } catch (error) {
         console.log(error);
