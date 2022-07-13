@@ -474,7 +474,7 @@ exports.addComplaint = async (req, res, next) => {
                 form: req.body.form,
                 contact_number:req.body.number,
                 contact_mail:req.body.mail,
-                issuedAt:new Date()
+                issuedAt:req.body.date
             },
             owner:_id
         });
