@@ -379,7 +379,7 @@ exports.getAnnounce = async (req, res, next) => {
                 announce:1,
                 issuedA:1,
                 _id:0
-            });
+            }).sort({issuedAt:-1});
             res.status(200).json(announcements); 
         }
         else{
@@ -550,7 +550,7 @@ exports.getAppointments = async (req,res,next) => {
             const appointments = await Meeting.find({},{_id:0}).populate(
                 {path:"doctor",select:{username:1,email:1,_id:0},
             populate:{path:"entity_id",select:{name:1,_id:0}}}).populate(
-                {path:"user",select:{username:1,email:1,_id:0}});
+                {path:"user",select:{username:1,email:1,_id:0}}).sort({Date:-1});
             if(appointments.length==0){
                 res.status(200).json("no appointments available");
             }
@@ -576,7 +576,7 @@ exports.getAllOrders = async (req,res,next) => {
             const orders = await Order.find({},{_id:0}).populate(
                 {path:"pharmacy",select:{name:1,admin:1,_id:0},
                 populate:{path:"admin",select:{username:1,email:1,_id:0}}}).populate(
-                {path:"user",select:{username:1,email:1,_id:0}});
+                {path:"user",select:{username:1,email:1,_id:0}}).sort({"order_data.Date":-1});
             if(orders.length==0){
                 res.status(200).json("no orders available");
             }
@@ -1201,7 +1201,7 @@ exports.getComplaints = async (req, res, next) => {
                 complaint:1,
                 owner:1,
                 _id:0
-            }).populate({path:"owner",select: {username:1,email:1, _id:0}});
+            }).populate({path:"owner",select: {username:1,email:1, _id:0}}).sort({"complaint.issuedAt":-1});
             
             res.status(200).json(complaints); 
         }
