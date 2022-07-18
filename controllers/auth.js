@@ -464,6 +464,42 @@ exports.loginUserApp = async(req,res,next) => {
         res.status(400).json(error.message);
     } 
 };
+
+exports.loginUserWithFace = async(req,res,next) => {
+    try {
+        //todo
+        const email= req.body.email;
+        if(email){
+            const user = await User.findOne({email});
+            if(user){
+                const token = createToken(user._id,"user");
+                const returns = {
+                    username:user.username,
+                    email:user.email,
+                    profilePic:user.profilePic,
+                    gender:user.gender,
+                    history:user.history,
+                    dateOfBirth:user.dateOfBirth,
+                    blood:user.blood,
+                    address:user.address,
+                    phone:user.phone,
+                    token
+                };
+                return res.status(200).json(returns);
+            }
+            else{
+                return res.status(200).json("no user found");
+            }
+        }
+        else{
+            res.status(400).json("missing data");
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    } 
+};
+
 exports.loginDoctorApp = async(req,res,next) => {
     try {
         //todo
