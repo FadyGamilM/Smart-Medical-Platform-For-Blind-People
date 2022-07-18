@@ -586,6 +586,24 @@ exports.loginDoctorApp = async(req,res,next) => {
     } 
 };
 
+exports.getemails = async (req, res, next) => {
+    try {
+
+        const emails = await User.find({},{email:1,_id:0});
+        
+        list=[]
+        for(let x in emails){
+            list.push(emails[x].email);
+        }
+        //console.log(list)
+        res.status(200).json(list); 
+        
+    } catch (error) {
+        console.log(error);
+        res.status(400).json(error.message);
+    }
+};
+
 // exports.logout = async(req,res,next) => {
 //     try {
 //         //todo
