@@ -66,7 +66,8 @@ exports.registerUser = async(req,res,next) =>{
                     dateOfBirth:req.body.dateOfBirth,
                     blood:req.body.blood,
                     address:req.body.address,
-                    phone:req.body.phone
+                    phone:req.body.phone,
+                    face:true
                 });
                 const token = createToken(newUser._id, "user");
                 const returns = {
@@ -625,7 +626,7 @@ exports.loginDoctorApp = async(req,res,next) => {
 exports.getemails = async (req, res, next) => {
     try {
 
-        const emails = await User.find({},{email:1,_id:0});
+        const emails = await User.find({face:true},{email:1,_id:0});
         
         list=[]
         for(let x in emails){

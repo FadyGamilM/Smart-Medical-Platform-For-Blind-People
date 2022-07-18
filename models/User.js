@@ -68,6 +68,10 @@ const user_schema = new mongoose.Schema({
 	phone:{
 		type:String,
 		default:""
+	},
+	face:{
+		type:Boolean,
+		default:false
 	}
 });
 //fire a function before saving document to db
